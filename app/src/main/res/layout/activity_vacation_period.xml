@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:fitsSystemWindows="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="POSER UNE PÉRIODE DE CONGÉS"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/brand_primary"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date de début"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+    <Button
+        android:id="@+id/btnStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Choisir le début"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date de fin"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+    <Button
+        android:id="@+id/btnEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Choisir la fin"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="48dp"/>
+
+    <Button
+        android:id="@+id/btnConfirmVacation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="VALIDER LES VACANCES"
+        android:textStyle="bold"
+        style="@style/Widget.MaterialComponents.Button"/>
+
+</LinearLayout>

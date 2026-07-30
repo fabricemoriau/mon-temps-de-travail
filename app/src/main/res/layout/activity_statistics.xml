@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="#F8F9FA">
+
+    <!-- Header Navigation Mensuelle Compact -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/brand_primary"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:elevation="4dp">
+
+        <ImageButton
+            android:id="@+id/btnPrevMonth"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:contentDescription="Mois précédent"/>
+
+        <TextView
+            android:id="@+id/tvCurrentMonthYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mars 2025"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <ImageButton
+            android:id="@+id/btnNextMonth"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_media_next"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:contentDescription="Mois suivant"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvComparisonInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comparaison avec le mois dernier : --%"
+                android:textSize="13sp"
+                android:textColor="@color/brand_accent"
+                android:layout_marginBottom="12dp"
+                android:textStyle="bold"/>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginBottom="12dp"
+                android:background="@color/white"/>
+
+            <TextView
+                android:id="@+id/tvStatsDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calcul des statistiques..."
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp"
+                android:background="#FFFFFF"
+                android:elevation="2dp"
+                android:padding="12dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ANALYSE DU REPOS (CUMULÉ)"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="@color/brand_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvPauseAnalysis"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total Pauses : 00h00"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <ProgressBar
+                        android:id="@+id/pbWorkPauseRatio"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:layout_marginTop="8dp"
+                        android:progress="50"
+                        android:progressTint="@color/brand_primary"
+                        android:progressBackgroundTint="#CCCCCC"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bleu : Travail | Gris : Pauses/Repos"
+                        android:textSize="10sp"
+                        android:gravity="end"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/btnPrintStats"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="EXPORTER BILAN MENSUEL"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="40dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@android:drawable/ic_menu_save"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

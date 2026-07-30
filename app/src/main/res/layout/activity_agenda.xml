@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="#F8F9FA">
+
+    <!-- Header avec Date (Design Sublimé) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/brand_primary"
+        android:padding="20dp"
+        android:gravity="center_vertical"
+        android:elevation="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDateStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUJOURD'HUI"
+                android:textColor="#FFEB3B"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/item_client_background"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvCurrentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mardi 28 Juillet"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:letterSpacing="-0.02"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/tvRealTodayDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aujourd'hui nous sommes le 28/07/2026"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#33FFFFFF">
+            <ImageButton
+                android:id="@+id/btnSelectDate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@android:drawable/ic_menu_today"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                app:tint="@color/white"
+                android:contentDescription="Choisir date"/>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingBottom="60dp">
+
+            <!-- Carte RTT / Repos (Plus contrastée) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="#FBC02D">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical"
+                    android:background="#FFFDE7">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_lock_power_off"
+                        app:tint="#F9A825"
+                        android:contentDescription="Icone RTT"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="MODE REPOS / RTT"
+                        android:textStyle="bold"
+                        android:textColor="#827717"
+                        android:textSize="16sp"
+                        android:letterSpacing="0.05"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/swIsRTT"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:thumbTint="#FBC02D"
+                        app:trackTint="#FFF59D"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Conteneur des heures -->
+            <LinearLayout
+                android:id="@+id/llWorkDetailsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Carte Véhicule (Design TextInputLayout) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="VÉHICULE DE SERVICE"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary"
+                            android:layout_marginBottom="16dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:hint="Type (T, A...)"
+                                app:startIconDrawable="@drawable/ic_car"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etTypeVehicule"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textCapCharacters"
+                                    android:maxLength="3"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1.5"
+                                android:hint="N° / Plaque"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etNumVehicule"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="text"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Carte Horaires (Design Boutons Modernes) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DÉTAIL DU SERVICE"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary"
+                            android:layout_marginBottom="16dp"/>
+
+                        <Button
+                            android:id="@+id/btnDebutTravail"
+                            android:layout_width="match_parent"
+                            android:layout_height="76dp"
+                            android:text="DÉBUT --:--"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary"
+                            app:icon="@android:drawable/ic_lock_idle_alarm"
+                            app:iconSize="32dp"
+                            app:iconGravity="textStart"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeWidth="2dp"
+                            android:layout_marginBottom="20dp"/>
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:alignmentMode="alignMargins">
+
+                            <Button android:id="@+id/btnPause1Debut" android:text="P1 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+                            <Button android:id="@+id/btnPause1Fin" android:text="P1 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+
+                            <Button android:id="@+id/btnRepasDebut" android:text="REPAS DÉB." app:icon="@android:drawable/ic_menu_today" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+                            <Button android:id="@+id/btnRepasFin" android:text="REPAS FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+
+                            <Button android:id="@+id/btnPause2Debut" android:text="P2 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+                            <Button android:id="@+id/btnPause2Fin" android:text="P2 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+
+                            <Button android:id="@+id/btnPauseNuitDebut" android:text="NUIT DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+                            <Button android:id="@+id/btnPauseNuitFin" android:text="NUIT FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
+                        </GridLayout>
+
+                        <Button
+                            android:id="@+id/btnFinTravail"
+                            android:layout_width="match_parent"
+                            android:layout_height="76dp"
+                            android:text="FIN --:--"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary"
+                            app:icon="@android:drawable/ic_lock_idle_alarm"
+                            app:iconSize="32dp"
+                            app:iconGravity="textStart"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeWidth="2dp"
+                            android:layout_marginTop="20dp"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Carte Options -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/cbRepasSup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Repas supplémentaire (+ Frais)"
+                            android:textSize="14sp"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/cbGardeJour"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Garde SAMU de Jour (12h)"
+                            android:textSize="14sp"
+                            app:buttonTint="#2196F3"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/cbGardeNuit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Garde SAMU de Nuit (12h)"
+                            android:textSize="14sp"
+                            app:buttonTint="#3F51B5"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Tableau de Bord des Résultats (Design Montre Connectée) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="#FFFFFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RÉSUMÉ CALCULÉ"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="#666666"
+                            android:layout_marginBottom="16dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="12dp">
+                            <TextView
+                                android:id="@+id/tvTempsEffectif"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="00h00"
+                                android:textSize="36sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/brand_primary"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="EFFECTIF"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/brand_primary"
+                                android:alpha="0.7"/>
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginBottom="12dp"/>
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2">
+
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="AMPLITUDE" android:textSize="10sp" android:textColor="#999999"/>
+                                <TextView android:id="@+id/tvAmplitude" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#333333"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="H. SUPP." android:textSize="10sp" android:textColor="#999999"/>
+                                <TextView android:id="@+id/tvHeuresSup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#E91E63"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1" android:layout_marginTop="12dp">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NUIT (21h-6h)" android:textSize="10sp" android:textColor="#999999"/>
+                                <TextView android:id="@+id/tvHeuresNuit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#3F51B5"/>
+                            </LinearLayout>
+                        </GridLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout> <!-- Fin llWorkDetailsContainer -->
+
+            <!-- Actions Finales -->
+            <Button
+                android:id="@+id/btnSaveWorkDay"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="ENREGISTRER LA JOURNÉE"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnDeleteWorkDay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RÉINITIALISER"
+                    android:textColor="#D32F2F"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconTint="#D32F2F"/>
+
+                <Button
+                    android:id="@+id/btnPrint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PARTAGER"
+                    android:textColor="@color/brand_primary"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    app:icon="@android:drawable/ic_menu_share"
+                    android:contentDescription="Partager"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

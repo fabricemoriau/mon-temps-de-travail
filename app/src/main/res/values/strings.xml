@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">Mon Temps de Travail</string>
+    <string name="title_main">MON TEMPS DE TRAVAIL</string>
+    <string name="btn_start">Démarrer</string>
+    <string name="btn_stop">Arrêter</string>
+    <string name="btn_reset">Réinitialiser</string>
+
+    <string name="title_profile">Mon Profil</string>
+    <string name="hint_nom">Nom</string>
+    <string name="hint_prenom">Prénom</string>
+    <string name="hint_societe">Société</string>
+    <string name="hint_anciennete">Ancienneté (années)</string>
+    <string name="hint_poste">Poste occupé</string>
+    <string name="hint_adresse_perso">Adresse personnelle</string>
+    <string name="hint_adresse_travail">Adresse de travail</string>
+    <string name="hint_tel">Téléphone</string>
+    <string name="btn_save">Enregistrer</string>
+    <string name="welcome_message">Bienvenue sur votre application de suivi de travail.</string>
+
+    <string name="menu_settings">Paramètres</string>
+    <string name="menu_agenda">Agenda du jour</string>
+
+    <string name="title_agenda">Agenda de Travail</string>
+    <string name="label_debut_travail">Début Travail</string>
+    <string name="label_fin_travail">Fin Travail</string>
+    <string name="label_pause1_debut">Début Pause 1</string>
+    <string name="label_pause1_fin">Fin Pause 1</string>
+    <string name="label_repas_debut">Début Array</string>
+    <string name="label_repas_fin">Fin Repas</string>
+    <string name="label_pause2_debut">Début Pause 2</string>
+    <string name="label_pause2_fin">Fin Pause 2</string>
+    <string name="label_amplitude">Amplitude journalière :</string>
+    <string name="label_temps_effectif">Temps effectif :</string>
+    <string name="label_heures_sup">Heures supplémentaires :</string>
+    <string name="label_heures_nuit">Heures de nuit (21h-6h) :</string>
+    <string name="btn_calculate">Calculer la journée</string>
+
+    <string name="menu_scanner">Scanner Documents</string>
+    <string name="title_scanner">Scanner Documents</string>
+    <string name="btn_scan_route">Scanner Feuille de Route</string>
+    <string name="btn_scan_carnet">Scanner Carnet d\'Heures</string>
+    <string name="btn_view_album_route">Album Feuilles de Route</string>
+    <string name="btn_view_album_carnet">Album Carnets d\'Heures</string>
+    <string name="msg_camera_error">Erreur lors de l\'ouverture de l\'appareil photo</string>
+
+    <string name="title_history">Historique / Recherche</string>
+    <string name="hint_search_date">Rechercher par date (JJ/MM/AAAA)</string>
+
+    <string name="label_vehicule">Type de véhicule (T, A, VSL)</string>
+    <string name="label_num_vehicule">Numéro véhicule / Plaque</string>
+    <string name="label_service">Service (ex: SMUR, Nuit...)</string>
+    <string name="label_hopital">Hôpital habituel</string>
+    <string name="btn_print">Imprimer / Partager</string>
+    <string name="menu_stats">Statistiques &amp; Graphiques</string>
+    <string name="menu_salaire">Calcul du Salaire</string>
+    <string name="menu_clients">Mes Clients / Patients</string>
+    <string name="title_clients">Mes Patients (SÉCURISÉ)</string>
+    <string name="btn_add_client">+ Ajouter un client</string>
+    <string name="hint_client_nom">Nom du client</string>
+    <string name="hint_client_prenom">Prénom</string>
+    <string name="hint_client_adresse">Adresse</string>
+    <string name="hint_client_tel">Téléphone</string>
+    <string name="btn_save_client">Enregistrer le client</string>
+    <string name="btn_call">Appeler</string>
+    <string name="btn_map">Itinéraire</string>
+    <string name="btn_share_client">Partager fiche</string>
+    <string name="hint_search">Rechercher par nom, tel, adresse...</string>
+    <string name="btn_sync">Synchroniser</string>
+    <string name="msg_client_added">Client ajouté avec succès !</string>
+    <string name="title_stats">Analyse du temps</string>
+
+    <string name="title_salaire">Calcul du Salaire</string>
+    <string name="label_taux_horaire">Taux horaire brut (€)</string>
+    <string name="label_nb_paniers">Nombre de paniers repas</string>
+    <string name="label_taux_panier">Prix d\'un panier (€)</string>
+    <string name="label_taches_comp">Appliquer les 5% (tâches comp.)</string>
+    <string name="btn_calculate_salary">Calculer le salaire</string>
+    <string name="result_salaire_brut">Salaire Brut estimé :</string>
+    <string name="result_details">Détails : %s</string>
+    <string name="hint_client_notes">Notes / Infos complémentaires</string>
+    <string name="title_lieux">Codes des Lieux</string>
+    <string name="btn_add_lieu">Ajouter un lieu/code</string>
+    <string name="hint_lieu_nom">Nom du lieu</string>
+    <string name="hint_lieu_code">Code d\'accès</string>
+    <string name="hint_lieu_notes">Notes sur le lieu</string>
+    <string name="menu_lieux">Mes Codes Lieux</string>
+    <string name="btn_save_lieu">Enregistrer le lieu</string>
+    <string name="msg_lieu_added">Lieu ajouté avec succès !</string>
+    <string name="title_docs">Docs &amp; Diplômes</string>
+    <string name="menu_docs">Documents Obligatoires</string>
+    <string name="btn_add_doc">Scanner un document</string>
+    <string name="label_date_expiration">Date de validité (facultatif)</string>
+    <string name="alert_expiration_soon">Attention : Un document expire bientôt !</string>
+    <string name="btn_export_pdf">Exporter en PDF</string>
+    <string name="btn_export_email">Envoyer par Email</string>
+    <string name="title_collegues">Annuaire Collègues</string>
+    <string name="menu_collegues">Mes Collègues</string>
+    <string name="btn_add_collegue">Ajouter un collègue</string>
+    <string name="hint_collegue_nom">Nom du collègue</string>
+    <string name="hint_collegue_prenom">Prénom</string>
+    <string name="hint_collegue_tel">Téléphone</string>
+    <string name="btn_message">Envoyer Message</string>
+    <string name="title_message_group">Message Groupé</string>
+    <string name="hint_message_content">Tapez votre message ici...</string>
+    <string name="btn_send_all">Envoyer à TOUS</string>
+    <string name="btn_send_selected">Envoyer aux sélectionnés</string>
+    <string name="share_subject">Récapitulatif de travail - %s</string>
+
+    <string name="hint_adresse">Adresse</string>
+    <string name="hint_notes">Observations / Notes</string>
+    <string name="msg_deleted">Fiche masquée et synchronisée</string>
+    <string name="msg_saved">Fiche enregistrée localement</string>
+    <string name="label_decedee">Patient(e) décédé(e) (Masquer la fiche)</string>
+    <string name="label_garde_jour">Garde de jour 12 heure</string>
+    <string name="label_garde_nuit">Garde de nuit 12 h00</string>
+</resources>

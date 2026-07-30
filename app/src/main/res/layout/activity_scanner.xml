@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_scanner"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnScanRoute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_scan_route"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/btnScanCarnet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_scan_carnet"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/btnScanPaie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scanner Fiche de Paie"
+        android:layout_marginBottom="32dp"
+        android:padding="16dp"
+        android:backgroundTint="#FF6F00"
+        android:textColor="@color/white"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnViewAlbumRoute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_view_album_route"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnViewAlbumCarnet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_view_album_carnet"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnViewAlbumPaie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Album Fiches de Paie"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:textColor="#FF6F00"
+        app:strokeColor="#FF6F00"/>
+
+</LinearLayout>

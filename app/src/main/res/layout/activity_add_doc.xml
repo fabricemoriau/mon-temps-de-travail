@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvAddDocTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nouveau Document"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etDocTitre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Titre du document (ex: Diplôme)"
+        android:inputType="text"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/etDocDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date d'expiration (JJ/MM/AAAA) - Facultatif"
+        android:inputType="phone"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnScanDoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prendre en Photo / Scanner"
+        android:layout_marginBottom="24dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <ImageView
+        android:id="@+id/ivDocPreview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerInside"
+        android:background="#F0F0F0"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/btnSaveDoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enregistrer le Document"/>
+
+</LinearLayout>

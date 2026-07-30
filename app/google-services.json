@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "378775600000",
+    "project_id": "mon-temps-de-travail",
+    "storage_bucket": "mon-temps-de-travail.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378775600000:android:be03a2e059f9396e665f65",
+        "android_client_info": {
+          "package_name": "com.example.montempsdetravail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw9UpWzLoZgBCOeyEf5VrV6VxzDVpJ_84"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

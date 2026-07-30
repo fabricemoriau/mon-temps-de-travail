@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_primary">#1A237E</color>
+    <color name="brand_secondary">#0D47A1</color>
+    <color name="brand_accent">#FFAB40</color>
+    <color name="background_light">#F5F7FA</color>
+    <color name="text_dark">#263238</color>
+    <color name="text_light">#78909C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="red">#FF5252</color>
+
+    <!-- Compatibilité système -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+</resources>

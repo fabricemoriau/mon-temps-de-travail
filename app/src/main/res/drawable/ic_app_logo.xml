@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Fond Cercle Premium avec bordure -->
+    <path
+        android:pathData="M50,50m-48,0a48,48 0,1,1 96,0a48,48 0,1,1 -96,0"
+        android:fillColor="#1A237E"
+        android:strokeColor="#FFAB40"
+        android:strokeWidth="2"/>
+
+    <!-- Anneau de l'horloge interne -->
+    <path
+        android:pathData="M50,50m-35,0a35,35 0,1,1 70,0a35,35 0,1,1 -70,0"
+        android:strokeColor="#FFAB40"
+        android:strokeWidth="1"
+        android:fillAlpha="0.1"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Marquage des heures (points) -->
+    <path android:pathData="M50,15 L50,20 M85,50 L80,50 M50,85 L50,80 M15,50 L20,50"
+          android:strokeColor="#FFFFFF" android:strokeWidth="2" android:strokeLineCap="round"/>
+
+    <!-- Aiguilles stylisées (Heure et Minute) -->
+    <path
+        android:pathData="M50,50 L50,30"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M50,50 L65,50"
+        android:strokeColor="#FFAB40"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"/>
+
+    <!-- Pivot central -->
+    <path
+        android:pathData="M50,50m-3,0a3,3 0,1,1 6,0a3,3 0,1,1 -6,0"
+        android:fillColor="#FFFFFF"/>
+
+    <!-- Texte stylisé discret "MT" en bas -->
+    <path
+        android:pathData="M42,65 L42,75 M42,65 L48,65 M48,65 L48,75 M52,65 L58,65 M55,65 L55,75"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"/>
+
+</vector>
