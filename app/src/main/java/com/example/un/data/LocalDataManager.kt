@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import java.io.File
+import java.util.UUID
 
 object LocalDataManager {
 
@@ -14,14 +15,17 @@ object LocalDataManager {
 
     fun getUserId(context: Context): String {
         val sharedPref = context.getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-        val nom = sharedPref.getString("nom", "")?.lowercase()?.trim()?.replace(" ", "_") ?: ""
-        val prenom = sharedPref.getString("prenom", "")?.lowercase()?.trim()?.replace(" ", "_") ?: ""
+        val nom = sharedPref.getString("nom", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
+        val prenom = sharedPref.getString("prenom", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
         val tel = sharedPref.getString("tel", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
         
-        return if (nom.isNotEmpty() && prenom.isNotEmpty()) {
-            if (tel.isNotEmpty()) "${nom}_${prenom}_$tel" else "${nom}_${prenom}"
+        return if (nom.isNotEmpty() && prenom.isNotEmpty() && tel.isNotEmpty()) {
+            "${nom}_${prenom}_$tel"
         } else {
-            "user_anonymous"
+            // ID temporaire basé sur l'installation si profil incomplet
+            val tempId = sharedPref.getString("temp_device_id", UUID.randomUUID().toString())
+            sharedPref.edit().putString("temp_device_id", tempId).apply()
+            tempId!!
         }
     }
 

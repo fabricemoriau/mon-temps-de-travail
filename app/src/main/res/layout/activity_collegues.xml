@@ -24,6 +24,16 @@
         android:text="@string/btn_add_collegue"
         android:layout_marginBottom="8dp"/>
 
+    <Button
+        android:id="@+id/btnGoToMyProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="M'IDENTIFIER / MON PROFIL"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@color/white"
+        android:layout_marginBottom="16dp"
+        style="@style/Widget.MaterialComponents.Button"/>
+
     <EditText
         android:id="@+id/etSearchCollegue"
         android:layout_width="match_parent"

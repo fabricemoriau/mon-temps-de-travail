@@ -44,6 +44,10 @@ class ColleguesActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnAddCollegue).setOnClickListener { showAddDialog() }
         
+        findViewById<Button>(R.id.btnGoToMyProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
         findViewById<Button>(R.id.btnGoToMessaging).setOnClickListener {
             startActivity(Intent(this, MessageGroupActivity::class.java))
         }
@@ -151,33 +155,27 @@ class ColleguesActivity : AppCompatActivity() {
 
     private fun showAdminPanel() {
         val dialogView: android.view.View = layoutInflater.inflate(R.layout.dialog_admin_panel, null)
-        val etUserId = dialogView.findViewById<EditText>(R.id.etBlockUserId)
-        val btnBlock = dialogView.findViewById<Button>(R.id.btnBlockUser)
-        val btnUnblock = dialogView.findViewById<Button>(R.id.btnUnblockUser)
+        val rvAdmin = dialogView.findViewById<RecyclerView>(R.id.rvAdminCollegues)
+        
+        // Sous-liste pour l'admin
+        rvAdmin.layoutManager = LinearLayoutManager(this)
+        val adminAdapter = AdminCollegueAdapter(colleguesList) { col, isBlocked ->
+            val blockedRef = FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_BLOCKED_USERS)
+            if (isBlocked) {
+                blockedRef.child(col.id).setValue(true)
+                Toast.makeText(this, "${col.prenom} BLOQUÉ", Toast.LENGTH_SHORT).show()
+            } else {
+                blockedRef.child(col.id).removeValue()
+                Toast.makeText(this, "${col.prenom} DÉBLOQUÉ", Toast.LENGTH_SHORT).show()
+            }
+        }
+        rvAdmin.adapter = adminAdapter
 
-        val dialog = AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
             .setTitle("Administration Maître")
             .setView(dialogView)
             .setNegativeButton("Fermer", null)
-            .create()
-
-        btnBlock.setOnClickListener {
-            val id = etUserId.text.toString().trim().lowercase()
-            if (id.isNotEmpty()) {
-                FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_BLOCKED_USERS).child(id).setValue(true)
-                Toast.makeText(this, "Utilisateur $id BLOQUÉ", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        btnUnblock.setOnClickListener {
-            val id = etUserId.text.toString().trim().lowercase()
-            if (id.isNotEmpty()) {
-                FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_BLOCKED_USERS).child(id).removeValue()
-                Toast.makeText(this, "Utilisateur $id DÉBLOQUÉ", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        dialog.show()
+            .show()
     }
 
     override fun onSupportNavigateUp(): Boolean {

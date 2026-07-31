@@ -1,6 +1,7 @@
 package com.example.un
 
 import android.app.Application
+import com.example.un.data.AdminConfig
 import com.example.un.data.ClientRepository
 import com.example.un.data.local.AppDatabase
 import com.google.firebase.database.FirebaseDatabase
@@ -12,7 +13,7 @@ class MonTempsApp : Application() {
     val repository by lazy { 
         ClientRepository(
             database.clientDao(), 
-            FirebaseDatabase.getInstance().getReference("shared").child("clients"),
+            FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_SHARED_PATIENTS),
             this
         )
     }

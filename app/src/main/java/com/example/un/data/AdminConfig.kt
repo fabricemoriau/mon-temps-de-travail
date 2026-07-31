@@ -2,7 +2,7 @@ package com.example.un.data
 
 object AdminConfig {
     // Flag à changer manuellement avant de compiler l'APK (true pour Maître, false pour Collègue)
-    const val IS_MASTER_VERSION = false 
+    const val IS_MASTER_VERSION = true 
     
     // Code secret pour les actions sensibles
     const val ADMIN_CODE = "MASTER2026"

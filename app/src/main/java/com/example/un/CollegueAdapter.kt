@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
 import com.example.un.data.Collegue
+import com.example.un.data.LocalDataManager
 
 class CollegueAdapter(
     private val list: List<Collegue>,
@@ -33,7 +34,11 @@ class CollegueAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.tvName.text = "${item.nom} ${item.prenom}"
+        val context = holder.itemView.context
+        val myId = LocalDataManager.getUserId(context)
+        
+        val suffix = if (item.id == myId) " (Moi)" else ""
+        holder.tvName.text = "${item.nom} ${item.prenom}$suffix"
         holder.tvTel.text = item.tel
         
         holder.btnEdit.setOnClickListener { onEdit(item) }
