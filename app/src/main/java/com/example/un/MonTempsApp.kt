@@ -8,6 +8,7 @@ import com.example.un.data.AdminConfig
 import com.example.un.data.AppRepository
 import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.DatabaseHolder
+import com.example.un.data.local.getDatabaseBuilder
 import com.example.un.utils.NotificationHelper
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,7 +31,8 @@ class MonTempsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        DatabaseHolder.init(DatabaseHelper.getDatabase(this))
+        val builder = getDatabaseBuilder(this)
+        DatabaseHolder.init(builder.build())
         Log.d("MonTempsApp", "Initialisation de l'application...")
         
         NotificationHelper.createNotificationChannel(this)
