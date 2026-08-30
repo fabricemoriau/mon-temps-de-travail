@@ -19,6 +19,7 @@ import com.example.un.data.StatsViewModel
 import com.example.un.data.LieuViewModel
 import com.example.un.data.DocsViewModel
 import com.example.un.ui.*
+import com.example.un.utils.openUrl
 
 @Composable
 fun App() {
@@ -106,6 +107,17 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
         OutlinedMenuButton(text = "LIEUX", onClick = { onNavigate("lieux") })
         OutlinedMenuButton(text = "DOCS", onClick = { onNavigate("docs") })
         OutlinedMenuButton(text = "COLLEGUES", onClick = { onNavigate("collegues") })
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { openUrl("https://github.com/fabricemoriau/mon-temps-de-travail/releases/tag/latest") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Default.Refresh, contentDescription = null)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("VÉRIFIER LES MISES À JOUR (GITHUB)")
+        }
 
         Spacer(modifier = Modifier.height(40.dp))
     }
