@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,21 +14,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.un.data.ClientViewModel
+import com.example.un.data.AgendaViewModel
+import com.example.un.data.StatsViewModel
 import com.example.un.ui.ClientsScreen
 import com.example.un.ui.SalaryScreen
+import com.example.un.ui.AgendaScreen
+import com.example.un.ui.StatsScreen
 
 @Composable
 fun App() {
     val coroutineScope = rememberCoroutineScope()
     val clientViewModel = remember { ClientViewModel(coroutineScope) }
+    val agendaViewModel = remember { AgendaViewModel(coroutineScope) }
+    val statsViewModel = remember { StatsViewModel(coroutineScope) }
     
     var currentScreen by remember { mutableStateOf("home") }
 
     MaterialTheme(
         colorScheme = lightColorScheme(
-            primary = Color(0xFF2196F3), // Bleu Android habituel
+            primary = Color(0xFF2196F3),
             onPrimary = Color.White,
-            secondary = Color(0xFF4CAF50), // Vert Forum
+            secondary = Color(0xFF4CAF50),
             onSecondary = Color.White
         )
     ) {
@@ -39,8 +46,10 @@ fun App() {
                 "home" -> HomeScreen(
                     onNavigate = { screen -> currentScreen = screen }
                 )
-                "clients" -> ClientsScreen(viewModel = clientViewModel)
+                "clients" -> ClientsScreen(viewModel = clientViewModel, onBack = { currentScreen = "home" })
                 "salary" -> SalaryScreen(onBack = { currentScreen = "home" })
+                "agenda" -> AgendaScreen(viewModel = agendaViewModel, onBack = { currentScreen = "home" })
+                "stats" -> StatsScreen(viewModel = statsViewModel, onBack = { currentScreen = "home" })
                 else -> PlaceholderScreen(currentScreen) { currentScreen = "home" }
             }
         }
@@ -73,12 +82,12 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
             text = "OUVRIR AGENDA GOOGLE",
             icon = Icons.Default.DateRange,
             color = Color(0xFF4285F4),
-            onClick = { /* Android Specific or URI */ }
+            onClick = { /* Android Specific */ }
         )
 
         MenuButton(
             text = "FORUM",
-            icon = Icons.Default.Send,
+            icon = Icons.AutoMirrored.Filled.Send,
             color = Color(0xFF4CAF50),
             onClick = { onNavigate("forum") }
         )
