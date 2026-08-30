@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.un.data.ClientViewModel
 import com.example.un.ui.ClientsScreen
+import com.example.un.ui.SalaryScreen
 
 @Composable
 fun App() {
@@ -39,6 +40,7 @@ fun App() {
                     onNavigate = { screen -> currentScreen = screen }
                 )
                 "clients" -> ClientsScreen(viewModel = clientViewModel)
+                "salary" -> SalaryScreen(onBack = { currentScreen = "home" })
                 else -> PlaceholderScreen(currentScreen) { currentScreen = "home" }
             }
         }
