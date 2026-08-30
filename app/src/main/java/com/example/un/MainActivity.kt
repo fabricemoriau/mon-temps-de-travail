@@ -94,9 +94,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val btnPublish = findViewById<Button>(R.id.btnPublishUpdate)
+        val btnShare = findViewById<Button>(R.id.btnShareApp)
+        
         if (AdminConfig.isMaster(this)) {
             btnPublish.visibility = View.VISIBLE
+            btnShare.visibility = View.VISIBLE
+            
             btnPublish.setOnClickListener {
+                // ... (reste du code)
                 AlertDialog.Builder(this)
                     .setTitle("Publication de version")
                     .setMessage("Voulez-vous définir cette version (${packageManager.getPackageInfo(packageName, 0).versionName}) comme la dernière version officielle sur Internet ?")
@@ -105,6 +110,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     .setNegativeButton("Annuler", null)
                     .show()
+            }
+            
+            btnShare.setOnClickListener {
+                startActivity(Intent(this, ShareAppActivity::class.java))
             }
         }
 
