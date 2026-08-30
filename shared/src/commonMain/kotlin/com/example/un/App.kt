@@ -16,10 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.example.un.data.ClientViewModel
 import com.example.un.data.AgendaViewModel
 import com.example.un.data.StatsViewModel
-import com.example.un.ui.ClientsScreen
-import com.example.un.ui.SalaryScreen
-import com.example.un.ui.AgendaScreen
-import com.example.un.ui.StatsScreen
+import com.example.un.data.LieuViewModel
+import com.example.un.data.DocsViewModel
+import com.example.un.ui.*
 
 @Composable
 fun App() {
@@ -27,6 +26,8 @@ fun App() {
     val clientViewModel = remember { ClientViewModel(coroutineScope) }
     val agendaViewModel = remember { AgendaViewModel(coroutineScope) }
     val statsViewModel = remember { StatsViewModel(coroutineScope) }
+    val lieuViewModel = remember { LieuViewModel(coroutineScope) }
+    val docsViewModel = remember { DocsViewModel(coroutineScope) }
     
     var currentScreen by remember { mutableStateOf("home") }
 
@@ -50,6 +51,9 @@ fun App() {
                 "salary" -> SalaryScreen(onBack = { currentScreen = "home" })
                 "agenda" -> AgendaScreen(viewModel = agendaViewModel, onBack = { currentScreen = "home" })
                 "stats" -> StatsScreen(viewModel = statsViewModel, onBack = { currentScreen = "home" })
+                "lieux" -> LieuxScreen(viewModel = lieuViewModel, onBack = { currentScreen = "home" })
+                "docs" -> DocsScreen(viewModel = docsViewModel, onBack = { currentScreen = "home" })
+                "forum" -> ForumScreen(onBack = { currentScreen = "home" })
                 else -> PlaceholderScreen(currentScreen) { currentScreen = "home" }
             }
         }
