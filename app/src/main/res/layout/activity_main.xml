@@ -189,8 +189,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:text="@string/menu_collegues"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="12dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+            <Button
+                android:id="@+id/btnGoToCompose"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="INTERFACE IPHONE (TEST)"
+                android:layout_marginBottom="24dp"
+                android:textColor="@color/white"
+                android:backgroundTint="#FF9800"
+                app:icon="@android:drawable/ic_menu_info_details"
+                style="@style/Widget.MaterialComponents.Button"/>
 
             <Button
                 android:id="@+id/btnCheckUpdate"

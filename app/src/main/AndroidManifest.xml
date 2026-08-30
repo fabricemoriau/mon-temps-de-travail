@@ -53,6 +53,7 @@
         <activity android:name="com.example.un.SharedMessagingActivity" android:exported="false" android:label="Discussion Forum" />
         <activity android:name="com.example.un.ForumActivity" android:exported="false" android:label="Forum de Discussion" />
         <activity android:name="com.example.un.ProfileActivity" android:exported="false" android:label="@string/title_profile" />
+        <activity android:name="com.example.un.ComposeActivity" android:exported="false" android:label="Interface Multiplateforme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

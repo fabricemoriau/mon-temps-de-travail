@@ -85,6 +85,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ColleguesActivity::class.java))
         }
 
+        findViewById<Button>(R.id.btnGoToCompose).setOnClickListener {
+            startActivity(Intent(this, ComposeActivity::class.java))
+        }
+
         findViewById<Button>(R.id.btnCheckUpdate).setOnClickListener {
             AppUpdateManager.checkUpdates(this, manualCheck = true)
         }

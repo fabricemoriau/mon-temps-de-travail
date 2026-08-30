@@ -30,9 +30,11 @@ class ScanAdapter(private val onClick: (ScanEntity) -> Unit) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val scan = getItem(position)
         
-        if (scan.type == "PAIE" && scan.month != null && scan.year != null) {
+        val month = scan.month
+        val year = scan.year
+        if (scan.type == "PAIE" && month != null && year != null) {
             val months = arrayOf("Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre")
-            holder.tvDate.text = "${months[scan.month - 1]} ${scan.year}"
+            holder.tvDate.text = "${months[month - 1]} $year"
         } else {
             holder.tvDate.text = scan.dateFormatted
         }
