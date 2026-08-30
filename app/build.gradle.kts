@@ -16,8 +16,8 @@ android {
         applicationId = "com.example.montempsdetravail"
         minSdk = 24
         targetSdk = 35
-        versionCode = 15
-        versionName = "1.14"
+        versionCode = 16
+        versionName = "1.15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,7 +44,7 @@ android {
 
     applicationVariants.all {
         val variant = this
-        val customFileName = "MonTemps_v1.14.apk"
+        val customFileName = "MonTemps_v1.15.apk"
         
         outputs.all {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
