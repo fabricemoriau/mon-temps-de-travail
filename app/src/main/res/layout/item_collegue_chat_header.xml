@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center"
+    android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/ivColAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:background="@drawable/circle_background"
+        android:padding="8dp"
+        app:tint="@color/white"
+        android:contentDescription="Avatar" />
+
+    <TextView
+        android:id="@+id/tvColName"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:textColor="#333333" />
+</LinearLayout>

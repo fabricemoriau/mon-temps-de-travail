@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <queries>
@@ -46,9 +47,11 @@
         <activity android:name="com.example.un.DocsActivity" android:exported="false" android:label="@string/title_docs" />
         <activity android:name="com.example.un.AddDocActivity" android:exported="false" android:label="Ajouter Doc" />
         <activity android:name="com.example.un.ScanAlbumActivity" android:exported="false" android:label="Album" />
+        <activity android:name="com.example.un.ImageDetailActivity" android:exported="false" android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name="com.example.un.ColleguesActivity" android:exported="false" android:label="@string/title_collegues" />
         <activity android:name="com.example.un.MessageGroupActivity" android:exported="false" android:label="Message Groupé" />
-        <activity android:name="com.example.un.SharedMessagingActivity" android:exported="false" android:label="Messagerie Partagée" />
+        <activity android:name="com.example.un.SharedMessagingActivity" android:exported="false" android:label="Discussion Forum" />
+        <activity android:name="com.example.un.ForumActivity" android:exported="false" android:label="Forum de Discussion" />
         <activity android:name="com.example.un.ProfileActivity" android:exported="false" android:label="@string/title_profile" />
 
         <provider

@@ -12,7 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
 import com.example.un.data.local.AppDatabase
 import com.example.un.utils.HolidayHelper
+import com.example.un.utils.toLocalDate
 import com.example.un.utils.PdfGenerator
+import com.example.un.utils.SalaryCalculator
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,6 +34,31 @@ class SalaryActivity : AppCompatActivity() {
         val etTaux = findViewById<EditText>(R.id.etTauxHoraire)
         val etTauxPanier = findViewById<EditText>(R.id.etTauxPanier)
         val cbTachesComp = findViewById<CheckBox>(R.id.cbTachesComp)
+        val cbIsAmbulancier = findViewById<CheckBox>(R.id.cbIsAmbulancier)
+        val cbIsTaxi = findViewById<CheckBox>(R.id.cbIsTaxi)
+
+        // Charger les préférences
+        val sharedPref = getSharedPreferences("SalaryPrefs", MODE_PRIVATE)
+        val profilePrefs = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        
+        etTaux.setText(sharedPref.getString("taux_horaire", profilePrefs.getString("taux_net_base", "12.50")))
+        etTauxPanier.setText(sharedPref.getString("taux_panier", profilePrefs.getString("taux_panier_prof", "9.20")))
+        cbTachesComp.isChecked = sharedPref.getBoolean("taches_comp", true)
+        cbIsAmbulancier.isChecked = sharedPref.getBoolean("is_ambu", true)
+        cbIsTaxi.isChecked = sharedPref.getBoolean("is_taxi", false)
+        
+        // Auto-activation des 5% si >= 2 qualifications dans le profil
+        val userPrefs = getSharedPreferences("UserProfile", MODE_PRIVATE)
+        val qualifCount = listOf(
+            userPrefs.getBoolean("qualif_dea", false),
+            userPrefs.getBoolean("qualif_taxi", false),
+            userPrefs.getBoolean("qualif_aux", false),
+            userPrefs.getBoolean("qualif_autre", false)
+        ).count { it }
+        
+        if (qualifCount >= 2) {
+            cbTachesComp.isChecked = true
+        }
         
         // Navigation mensuelle
         findViewById<ImageButton>(R.id.btnPrevMonth).setOnClickListener {
@@ -66,13 +93,27 @@ class SalaryActivity : AppCompatActivity() {
         }
 
         val watcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) { calculateSalary() }
+            override fun afterTextChanged(s: Editable?) { 
+                saveRates()
+                calculateSalary() 
+            }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         }
         etTaux.addTextChangedListener(watcher)
         etTauxPanier.addTextChangedListener(watcher)
-        cbTachesComp.setOnCheckedChangeListener { _, _ -> calculateSalary() }
+        cbTachesComp.setOnCheckedChangeListener { _, _ -> 
+            saveRates()
+            calculateSalary() 
+        }
+        cbIsAmbulancier.setOnCheckedChangeListener { _, _ ->
+            saveRates()
+            calculateSalary()
+        }
+        cbIsTaxi.setOnCheckedChangeListener { _, _ ->
+            saveRates()
+            calculateSalary()
+        }
 
         updateMonthDisplay()
         calculateSalary()
@@ -97,6 +138,8 @@ class SalaryActivity : AppCompatActivity() {
             putString("taux_horaire", findViewById<EditText>(R.id.etTauxHoraire).text.toString())
             putString("taux_panier", findViewById<EditText>(R.id.etTauxPanier).text.toString())
             putBoolean("taches_comp", findViewById<CheckBox>(R.id.cbTachesComp).isChecked)
+            putBoolean("is_ambu", findViewById<CheckBox>(R.id.cbIsAmbulancier).isChecked)
+            putBoolean("is_taxi", findViewById<CheckBox>(R.id.cbIsTaxi).isChecked)
             apply()
         }
     }
@@ -105,6 +148,8 @@ class SalaryActivity : AppCompatActivity() {
         val taux = findViewById<EditText>(R.id.etTauxHoraire).text.toString().toDoubleOrNull() ?: 12.5
         val prixPanier = findViewById<EditText>(R.id.etTauxPanier).text.toString().toDoubleOrNull() ?: 8.5
         val has5Percent = findViewById<CheckBox>(R.id.cbTachesComp).isChecked
+        val isAmbu = findViewById<CheckBox>(R.id.cbIsAmbulancier).isChecked
+        val isTaxi = findViewById<CheckBox>(R.id.cbIsTaxi).isChecked
 
         val startCal = (currentMonth.clone() as Calendar).apply {
             set(Calendar.DAY_OF_MONTH, 1)
@@ -124,71 +169,57 @@ class SalaryActivity : AppCompatActivity() {
                 .getWorkDaysInRange(startCal.timeInMillis, endCal.timeInMillis)
 
             var totalEffMillis = 0L
-            var totalSup25Millis = 0L
-            var totalSup50Millis = 0L
+            var totalSupMillis = 0L
             var totalNightMillis = 0L
             var totalSundayHolidayMillis = 0L
             var panierCount = 0
+            var gardeCount = 0
+            var sundayHolidayCount = 0
 
             days.forEach { wd ->
                 totalEffMillis += wd.effectiveMillis
+                totalSupMillis += wd.supMillis
                 totalNightMillis += wd.nightMillis
                 if (wd.hasExtraRepas) panierCount++
+                if (wd.isGardeJour || wd.isGardeNuit) gardeCount++
 
                 // Majoration Dimanche / Férié
                 val cal = Calendar.getInstance().apply { timeInMillis = wd.timestamp }
-                if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || HolidayHelper.isHoliday(cal)) {
+                if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || HolidayHelper.isHoliday(cal.toLocalDate())) {
                     totalSundayHolidayMillis += wd.effectiveMillis
+                    sundayHolidayCount++
                 }
             }
-
-            // Calcul Heures Supplémentaires (Simplifié pour le mois)
-            // Base légale transport : 151.67h / mois (35h hebdo)
-            // Majoration 25% de 151.67 à 186.33h (36h à 43h)
-            // Majoration 50% au delà de 186.33h
-            val totalEffHours = totalEffMillis / (1000.0 * 3600.0)
-            if (totalEffHours > 151.67) {
-                val excess = totalEffHours - 151.67
-                if (excess > 34.66) { // (43-35)*4.33
-                    totalSup25Millis = (34.66 * 3600 * 1000).toLong()
-                    totalSup50Millis = ((excess - 34.66) * 3600 * 1000).toLong()
-                } else {
-                    totalSup25Millis = (excess * 3600 * 1000).toLong()
-                }
-            }
-
-            val sup25Hours = totalSup25Millis / (1000.0 * 3600.0)
-            val sup50Hours = totalSup50Millis / (1000.0 * 3600.0)
-            val nightHours = totalNightMillis / (1000.0 * 3600.0)
-            val sunHolHours = totalSundayHolidayMillis / (1000.0 * 3600.0)
-
-            // Primes de Permanence (Garde 12h = Prime forfaitaire de 15€ possible + heures effectives)
-            val gardeCount = days.count { it.isGardeJour || it.isGardeNuit }
-            val payGardePrime = gardeCount * 15.0 
-
-            var basePay = totalEffHours * taux
-            if (has5Percent) basePay *= 1.05
             
-            val paySup25 = sup25Hours * taux * 0.25
-            val paySup50 = sup50Hours * taux * 0.50
-            val payNight = nightHours * taux * 0.25
-            val paySunHol = sunHolHours * taux * 0.50 
-            val totalPaniers = panierCount * prixPanier
-            
-            val totalBrut = basePay + paySup25 + paySup50 + payNight + paySunHol + payGardePrime + totalPaniers
+            val profilePrefs = getSharedPreferences("UserProfile", MODE_PRIVATE)
+            val customPrimeGarde = profilePrefs.getString("prime_garde_samu", "30.00")?.toDoubleOrNull() ?: 30.0
+            val customBaseHeures = profilePrefs.getString("base_heures", "151.67")?.toDoubleOrNull() ?: 151.67
+            val customMajorNuit = profilePrefs.getString("major_nuit", "25.0")?.toDoubleOrNull() ?: 25.0
+            val customPrimeDimanche = profilePrefs.getString("prime_dimanche", "26.30")?.toDoubleOrNull() ?: 26.30
+            val customIsCalcMensuel = profilePrefs.getBoolean("calc_mensuel", false)
 
-            findViewById<TextView>(R.id.tvResultBrut).text = String.format(Locale.FRANCE, "Total Brut : %.2f €", totalBrut)
-            findViewById<TextView>(R.id.tvResultDetails).text = String.format(Locale.FRANCE, 
-                "Heures Totales : %.2f h\n----------------------------\n" +
-                "Base (+5%% comp.) : %.2f €\n" +
-                "Supp 25%% (%.2f h) : %.2f €\n" +
-                "Supp 50%% (%.2f h) : %.2f €\n" +
-                "Nuit (+25%%) : %.2f €\n" +
-                "Dim/Férié (+50%%) : %.2f €\n" +
-                "Primes Gardes (%d) : %.2f €\n" +
-                "Paniers (%d) : %.2f €",
-                totalEffHours, basePay, sup25Hours, paySup25, sup50Hours, paySup50, payNight, paySunHol, gardeCount, payGardePrime, panierCount, totalPaniers
+            val result = SalaryCalculator.calculate(
+                isAmbulancier = isAmbu,
+                isTaxi = isTaxi,
+                totalEffMillis = totalEffMillis,
+                totalSupMillis = totalSupMillis,
+                totalNightMillis = totalNightMillis,
+                sundayHolidayEffMillis = totalSundayHolidayMillis,
+                tauxHoraire = taux,
+                panierCount = panierCount,
+                tauxPanier = prixPanier,
+                gardeCount = gardeCount,
+                has5PercentComp = has5Percent,
+                sundayHolidayCount = sundayHolidayCount,
+                primeGardeSamu = customPrimeGarde,
+                baseHeures = customBaseHeures,
+                tauxMajorNuit = customMajorNuit,
+                primeDimanche = customPrimeDimanche,
+                isCalcMensuel = customIsCalcMensuel
             )
+
+            findViewById<TextView>(R.id.tvResultBrut).text = String.format(Locale.FRANCE, "Total Net : %.2f €", result.totalNet)
+            findViewById<TextView>(R.id.tvResultDetails).text = result.details
         }
     }
 
@@ -200,9 +231,9 @@ class SalaryActivity : AppCompatActivity() {
         
         val monthName = sdfMonth.format(currentMonth.time).replaceFirstChar { it.uppercase() }
         val details = findViewById<TextView>(R.id.tvResultDetails).text.toString()
-        val totalBrut = findViewById<TextView>(R.id.tvResultBrut).text.toString()
+        val totalNet = findViewById<TextView>(R.id.tvResultBrut).text.toString()
         
-        val file = PdfGenerator.generateSalaryReport(this, monthName, details, totalBrut, fullName)
+        val file = PdfGenerator.generateSalaryReport(this, monthName, details, totalNet, fullName)
         
         if (file != null && file.exists()) {
             val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)

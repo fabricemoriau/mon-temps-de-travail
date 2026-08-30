@@ -72,7 +72,10 @@ class ClientAdapter(
         holder.llCall.setOnClickListener {
             if (client.tel.isNotEmpty()) {
                 try {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${client.tel}"))
+                    // Nettoyer le numéro pour le dialer : on enlève les textes entre parenthèses
+                    // et on ne garde que les chiffres et le '+'
+                    val cleanTel = client.tel.substringBefore("(").filter { it.isDigit() || it == '+' }
+                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$cleanTel"))
                     holder.itemView.context.startActivity(intent)
                 } catch (e: Exception) {
                     Toast.makeText(holder.itemView.context, "Erreur appel", Toast.LENGTH_SHORT).show()

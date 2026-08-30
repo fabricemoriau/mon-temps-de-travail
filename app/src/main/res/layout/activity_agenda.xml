@@ -75,7 +75,7 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -177,34 +177,117 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginEnd="8dp"
-                                android:hint="Type (T, A...)"
+                                android:hint="Type"
                                 app:startIconDrawable="@drawable/ic_car"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etTypeVehicule"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="textCapCharacters"
-                                    android:maxLength="3"/>
+                                    android:inputType="textCapSentences"/>
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1.5"
-                                android:hint="N° / Plaque"
+                                android:hint="Autre véhicule / N°"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etNumVehicule"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:inputType="text"/>
+                                    android:inputType="textCapSentences"/>
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Carte Horaires (Design Boutons Modernes) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SERVICE ET HORAIRES"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/brand_primary"
+                            android:letterSpacing="0.1"
+                            android:layout_marginBottom="16dp"/>
+
+                        <Button
+                            android:id="@+id/btnDebutTravail"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:text="DÉBUT --:--"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_work_primary"
+                            app:icon="@android:drawable/ic_lock_idle_alarm"
+                            app:iconSize="36dp"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/color_work_primary"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeWidth="2.5dp"
+                            app:strokeColor="@color/color_work_primary"
+                            android:layout_marginBottom="24dp"/>
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="2"
+                            android:alignmentMode="alignMargins">
+
+                            <!-- Pauses -->
+                            <Button android:id="@+id/btnPause1Debut" android:text="P1 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_media_pause" app:iconTint="@color/color_pause" app:strokeColor="@color/color_pause" android:textColor="@color/color_pause"/>
+                            <Button android:id="@+id/btnPause1Fin" android:text="P1 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_media_play" app:iconTint="@color/color_pause" app:strokeColor="@color/color_pause" android:textColor="@color/color_pause"/>
+
+                            <!-- Repas -->
+                            <Button android:id="@+id/btnRepasDebut" android:text="REPAS DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_menu_today" app:iconTint="@color/color_repas" app:strokeColor="@color/color_repas" android:textColor="@color/color_repas"/>
+                            <Button android:id="@+id/btnRepasFin" android:text="REPAS FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_menu_save" app:iconTint="@color/color_repas" app:strokeColor="@color/color_repas" android:textColor="@color/color_repas"/>
+
+                            <!-- Pause 2 -->
+                            <Button android:id="@+id/btnPause2Debut" android:text="P2 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_media_pause" app:iconTint="@color/color_pause" app:strokeColor="@color/color_pause" android:textColor="@color/color_pause"/>
+                            <Button android:id="@+id/btnPause2Fin" android:text="P2 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_media_play" app:iconTint="@color/color_pause" app:strokeColor="@color/color_pause" android:textColor="@color/color_pause"/>
+
+                            <!-- Nuit -->
+                            <Button android:id="@+id/btnPauseNuitDebut" android:text="NUIT DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_menu_view" app:iconTint="@color/color_night" app:strokeColor="@color/color_night" android:textColor="@color/color_night"/>
+                            <Button android:id="@+id/btnPauseNuitFin" android:text="NUIT FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="6dp" android:textSize="11sp" app:icon="@android:drawable/ic_menu_myplaces" app:iconTint="@color/color_night" app:strokeColor="@color/color_night" android:textColor="@color/color_night"/>
+                        </GridLayout>
+
+                        <Button
+                            android:id="@+id/btnFinTravail"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:text="FIN --:--"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_work_primary"
+                            app:icon="@android:drawable/ic_lock_idle_alarm"
+                            app:iconSize="36dp"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/color_work_primary"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            app:strokeWidth="2.5dp"
+                            app:strokeColor="@color/color_work_primary"
+                            android:layout_marginTop="24dp"/>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Carte Options -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -218,93 +301,19 @@
                         android:orientation="vertical"
                         android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="DÉTAIL DU SERVICE"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/brand_primary"
-                            android:layout_marginBottom="16dp"/>
-
-                        <Button
-                            android:id="@+id/btnDebutTravail"
-                            android:layout_width="match_parent"
-                            android:layout_height="76dp"
-                            android:text="DÉBUT --:--"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/brand_primary"
-                            app:icon="@android:drawable/ic_lock_idle_alarm"
-                            app:iconSize="32dp"
-                            app:iconGravity="textStart"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            app:strokeWidth="2dp"
-                            android:layout_marginBottom="20dp"/>
-
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:columnCount="2"
-                            android:alignmentMode="alignMargins">
-
-                            <Button android:id="@+id/btnPause1Debut" android:text="P1 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-                            <Button android:id="@+id/btnPause1Fin" android:text="P1 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-
-                            <Button android:id="@+id/btnRepasDebut" android:text="REPAS DÉB." app:icon="@android:drawable/ic_menu_today" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-                            <Button android:id="@+id/btnRepasFin" android:text="REPAS FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-
-                            <Button android:id="@+id/btnPause2Debut" android:text="P2 DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-                            <Button android:id="@+id/btnPause2Fin" android:text="P2 FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-
-                            <Button android:id="@+id/btnPauseNuitDebut" android:text="NUIT DÉB." android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-                            <Button android:id="@+id/btnPauseNuitFin" android:text="NUIT FIN" android:layout_height="64dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_gravity="fill_horizontal" android:layout_columnWeight="1" android:layout_margin="4dp" android:textSize="12sp"/>
-                        </GridLayout>
-
-                        <Button
-                            android:id="@+id/btnFinTravail"
-                            android:layout_width="match_parent"
-                            android:layout_height="76dp"
-                            android:text="FIN --:--"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/brand_primary"
-                            app:icon="@android:drawable/ic_lock_idle_alarm"
-                            app:iconSize="32dp"
-                            app:iconGravity="textStart"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            app:strokeWidth="2dp"
-                            android:layout_marginTop="20dp"/>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Carte Options -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/cbRepasSup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Repas supplémentaire (+ Frais)"
-                            android:textSize="14sp"/>
+                            android:text="Panier repas supplémentaire"
+                            android:textSize="14sp"
+                            app:buttonTint="@color/color_repas"/>
 
                         <com.google.android.material.checkbox.MaterialCheckBox
                             android:id="@+id/cbGardeJour"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Garde SAMU de Jour (12h)"
+                            android:text="Forfait Garde SAMU Jour"
                             android:textSize="14sp"
                             app:buttonTint="#2196F3"/>
 
@@ -312,81 +321,103 @@
                             android:id="@+id/cbGardeNuit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Garde SAMU de Nuit (12h)"
+                            android:text="Forfait Garde SAMU Nuit"
                             android:textSize="14sp"
-                            app:buttonTint="#3F51B5"/>
+                            app:buttonTint="@color/color_night"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/cbAllSup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Toute la journée en heures sup"
+                            android:textSize="14sp"
+                            app:buttonTint="@color/color_sup"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Tableau de Bord des Résultats (Design Montre Connectée) -->
+                <!-- Tableau de Bord des Résultats (Design Dashboard) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="8dp"
-                    app:cardBackgroundColor="#FFFFFF">
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="10dp"
+                    app:cardBackgroundColor="@color/color_work_primary">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="24dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="RÉSUMÉ CALCULÉ"
-                            android:textSize="12sp"
+                            android:text="BILAN DE LA JOURNÉE"
+                            android:textSize="11sp"
                             android:textStyle="bold"
-                            android:textColor="#666666"
-                            android:layout_marginBottom="16dp"/>
+                            android:textColor="#B3FFFFFF"
+                            android:letterSpacing="0.15"
+                            android:layout_marginBottom="20dp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:layout_marginBottom="12dp">
-                            <TextView
-                                android:id="@+id/tvTempsEffectif"
+                            android:layout_marginBottom="20dp">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@android:drawable/ic_lock_idle_alarm"
+                                app:tint="@color/white"
+                                android:layout_marginEnd="16dp"/>
+
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="00h00"
-                                android:textSize="36sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/brand_primary"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EFFECTIF"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/brand_primary"
-                                android:alpha="0.7"/>
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/tvTempsEffectif"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="00h00"
+                                    android:textSize="42sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/white"
+                                    android:letterSpacing="-0.02"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="TEMPS EFFECTIF"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#B3FFFFFF"/>
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginBottom="12dp"/>
+                        <View android:layout_width="match_parent" android:layout_height="1.5dp" android:background="#33FFFFFF" android:layout_marginBottom="20dp"/>
 
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:columnCount="2">
+                            android:columnCount="3">
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="AMPLITUDE" android:textSize="10sp" android:textColor="#999999"/>
-                                <TextView android:id="@+id/tvAmplitude" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#333333"/>
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="AMPLITUDE" android:textSize="10sp" android:textColor="#B3FFFFFF"/>
+                                <TextView android:id="@+id/tvAmplitude" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="18sp" android:textStyle="bold" android:textColor="@color/white"/>
                             </LinearLayout>
 
                             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="H. SUPP." android:textSize="10sp" android:textColor="#999999"/>
-                                <TextView android:id="@+id/tvHeuresSup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#E91E63"/>
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="H. SUPP." android:textSize="10sp" android:textColor="#B3FFFFFF"/>
+                                <TextView android:id="@+id/tvHeuresSup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="18sp" android:textStyle="bold" android:textColor="#FF4081"/>
                             </LinearLayout>
 
-                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1" android:layout_marginTop="12dp">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NUIT (21h-6h)" android:textSize="10sp" android:textColor="#999999"/>
-                                <TextView android:id="@+id/tvHeuresNuit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="16sp" android:textStyle="bold" android:textColor="#3F51B5"/>
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:orientation="vertical" android:layout_columnWeight="1">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="NUIT" android:textSize="10sp" android:textColor="#B3FFFFFF"/>
+                                <TextView android:id="@+id/tvHeuresNuit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="00h00" android:textSize="18sp" android:textStyle="bold" android:textColor="#8C9EFF"/>
                             </LinearLayout>
                         </GridLayout>
                     </LinearLayout>
@@ -435,5 +466,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

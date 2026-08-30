@@ -8,6 +8,9 @@ interface WorkDayDao {
     @Query("SELECT * FROM work_days ORDER BY timestamp DESC")
     fun getAllWorkDays(): Flow<List<WorkDayEntity>>
 
+    @Query("SELECT * FROM work_days")
+    suspend fun getAllWorkDaysList(): List<WorkDayEntity>
+
     @Query("SELECT * FROM work_days WHERE dateId = :id LIMIT 1")
     suspend fun getWorkDayById(id: String): WorkDayEntity?
 

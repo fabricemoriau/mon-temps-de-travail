@@ -1,17 +1,18 @@
 package com.example.un
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.*
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
 import com.example.un.data.ClientViewModel
 import com.example.un.data.ClientViewModelFactory
@@ -19,9 +20,8 @@ import com.example.un.data.local.ClientEntity
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 class AddClientActivity : AppCompatActivity() {
 
@@ -52,16 +52,21 @@ class AddClientActivity : AppCompatActivity() {
         clientId = intent.getStringExtra("CLIENT_ID")
 
         clientId?.let { id ->
-            lifecycleScope.launch {
-                (application as MonTempsApp).database.clientDao().getClientById(id)?.let { client ->
-                    etNom.setText(client.nom)
-                    etPrenom.setText(client.prenom)
-                    etTel.setText(client.tel)
-                    etDateNaissance.setText(client.dateNaissance)
-                    etAdresse.setText(client.adresse)
-                    etNotes.setText(client.notes)
-                    currentLat = client.latitude
-                    currentLng = client.longitude
+            viewModel.getClient(id).observe(this) { client ->
+                client?.let {
+                    // On ne met à jour que si les champs sont vides (chargement initial)
+                    // OU si on veut une synchronisation forcée en temps réel.
+                    // Pour éviter de couper la saisie de l'utilisateur, on peut vérifier le focus.
+                    if (!etNom.hasFocus()) etNom.setText(it.nom)
+                    if (!etPrenom.hasFocus()) etPrenom.setText(it.prenom)
+                    if (!etTel.hasFocus()) etTel.setText(it.tel)
+                    if (!etDateNaissance.hasFocus()) etDateNaissance.setText(it.dateNaissance)
+                    if (!etAdresse.hasFocus()) etAdresse.setText(it.adresse)
+                    if (!etNotes.hasFocus()) etNotes.setText(it.notes)
+                    if (!cbDecedee.hasFocus()) cbDecedee.isChecked = it.isDeleted
+                    
+                    currentLat = it.latitude
+                    currentLng = it.longitude
                 }
             }
         }

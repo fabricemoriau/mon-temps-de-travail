@@ -34,7 +34,7 @@ class AdminCollegueAdapter(
         holder.tvName.text = "${item.nom} ${item.prenom}"
 
         // Vérifier le statut actuel sur Firebase
-        val blockedRef = FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_BLOCKED_USERS).child(item.id)
+        val blockedRef = FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL).getReference(AdminConfig.PATH_BLOCKED_USERS).child(item.id)
         blockedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val isBlocked = snapshot.exists() && snapshot.getValue(Boolean::class.java) == true

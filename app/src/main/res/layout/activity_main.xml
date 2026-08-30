@@ -1,190 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/background_light"
-    android:scrollbars="vertical"
-    android:scrollbarStyle="outsideOverlay">
+    android:background="@color/background_light">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="20dp"
-        android:paddingBottom="40dp">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tvConnectionStatus"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay">
 
-        <!-- Bannière d'alerte (Invisible par défaut) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardYesterdayAlert"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="#FFF9C4"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="#FBC02D">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="20dp"
+            android:paddingBottom="40dp">
 
-            <LinearLayout
+            <!-- Bannière d'alerte (Invisible par défaut) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardYesterdayAlert"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_dialog_alert"
-                    app:tint="#F57F17"/>
-
-                <TextView
-                    android:id="@+id/tvAlertMessage"
-                    android:layout_width="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#FFF9C4"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#FBC02D">
+                <!-- ... contenu inchangé ... -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:text="Journée d'hier non saisie !"
-                    android:textColor="#F57F17"
-                    android:textStyle="bold"
-                    android:textSize="13sp"/>
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
 
-                <Button
-                    android:id="@+id/btnFixYesterday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="SAISIR"
-                    android:textSize="10sp"
-                    android:paddingHorizontal="8dp"
-                    style="@style/Widget.MaterialComponents.Button"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_dialog_alert"
+                        app:tint="#F57F17"/>
 
-                <ImageButton
-                    android:id="@+id/btnCloseAlert"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="#666666"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/tvAlertMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="Journée d'hier non saisie !"
+                        android:textColor="#F57F17"
+                        android:textStyle="bold"
+                        android:textSize="13sp"/>
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_app_logo"
-            android:layout_marginBottom="12dp"
-            android:contentDescription="Logo App"/>
+                    <Button
+                        android:id="@+id/btnFixYesterday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="SAISIR"
+                        android:textSize="10sp"
+                        android:paddingHorizontal="8dp"
+                        style="@style/Widget.MaterialComponents.Button"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MON TEMPS DE TRAVAIL"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/brand_primary"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="32dp"/>
+                    <ImageButton
+                        android:id="@+id/btnCloseAlert"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="#666666"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <Button
-            android:id="@+id/btnGoToClients"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="MES PATIENTS (SÉCURISÉ)"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_app_logo"
+                android:layout_marginBottom="12dp"
+                android:contentDescription="Logo App"/>
 
-        <Button
-            android:id="@+id/btnOpenGoogleCalendar"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="OUVRIR AGENDA GOOGLE (GARDES)"
-            android:layout_marginBottom="12dp"
-            android:textColor="@color/white"
-            android:backgroundTint="#4285F4"
-            app:icon="@android:drawable/ic_menu_today"
-            style="@style/Widget.MaterialComponents.Button"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="MON TEMPS DE TRAVAIL"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/brand_primary"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"/>
 
-        <Button
-            android:id="@+id/btnGoToSharedMessaging"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="MESSAGERIE PARTAGÉE (INTER-APPS)"
-            android:layout_marginBottom="12dp"
-            android:textColor="@color/white"
-            android:backgroundTint="#4CAF50"
-            app:icon="@android:drawable/ic_menu_send"
-            style="@style/Widget.MaterialComponents.Button"/>
+            <Button
+                android:id="@+id/btnGoToClients"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="MES PATIENTS (SÉCURISÉ)"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button"/>
 
-        <Button
-            android:id="@+id/btnGoToAgenda"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="SAISIE JOURNÉE (AGENDA)"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnOpenGoogleCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="OUVRIR AGENDA GOOGLE (GARDES)"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/white"
+                android:backgroundTint="#4285F4"
+                app:icon="@android:drawable/ic_menu_today"
+                style="@style/Widget.MaterialComponents.Button"/>
 
-        <Button
-            android:id="@+id/btnGoToWorkHistory"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="AGENDA DU MOIS (HISTORIQUE)"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToSharedMessaging"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="FORUM"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/white"
+                android:backgroundTint="#4CAF50"
+                app:icon="@android:drawable/ic_menu_send"
+                style="@style/Widget.MaterialComponents.Button"/>
 
-        <Button
-            android:id="@+id/btnGoToScanner"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_scanner"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToAgenda"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="SAISIE JOURNÉE (AGENDA)"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <Button
-            android:id="@+id/btnGoToSalary"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_salaire"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToWorkHistory"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="AGENDA DU MOIS (HISTORIQUE)"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <Button
-            android:id="@+id/btnGoToStats"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_stats"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToScanner"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_scanner"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <Button
-            android:id="@+id/btnGoToLieux"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_lieux"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToSalary"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_salaire"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <Button
-            android:id="@+id/btnGoToDocs"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_docs"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToStats"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_stats"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <Button
-            android:id="@+id/btnGoToCollegues"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/menu_collegues"
-            android:layout_marginBottom="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <Button
+                android:id="@+id/btnGoToLieux"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_lieux"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/btnGoToDocs"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_docs"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+            <Button
+                android:id="@+id/btnGoToCollegues"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="@string/menu_collegues"
+                android:layout_marginBottom="24dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+            <Button
+                android:id="@+id/btnCheckUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="VÉRIFIER LES MISES À JOUR"
+                android:layout_marginBottom="12dp"
+                app:icon="@android:drawable/stat_sys_download"
+                app:iconTint="@color/grey_600"
+                android:textColor="@color/grey_600"
+                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+            <Button
+                android:id="@+id/btnPublishUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="PUBLIER CETTE VERSION (MAÎTRE)"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:icon="@android:drawable/ic_menu_upload"
+                app:iconTint="#E91E63"
+                android:textColor="#E91E63"
+                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/tvConnectionStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F5F5F5"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="Vérification connexion..."
+        android:textColor="#888888"
+        android:textSize="11sp"
+        android:visibility="visible"/>
+
+</RelativeLayout>

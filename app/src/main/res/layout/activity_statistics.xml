@@ -47,7 +47,7 @@
             android:contentDescription="Mois suivant"/>
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -67,14 +67,85 @@
                 android:textSize="13sp"
                 android:textColor="@color/brand_accent"
                 android:layout_marginBottom="12dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:background="@drawable/bg_stat_info"
+                android:padding="8dp"/>
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/lineChart"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:layout_marginBottom="12dp"
-                android:background="@color/white"/>
+                android:layout_marginBottom="16dp"
+                android:background="@color/white"
+                android:elevation="2dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nuit"
+                            android:textSize="12sp"
+                            android:textColor="@color/grey_600"/>
+                        <TextView
+                            android:id="@+id/tvNightHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00h00"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/brand_primary"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sup."
+                            android:textSize="12sp"
+                            android:textColor="@color/grey_600"/>
+                        <TextView
+                            android:id="@+id/tvSupHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00h00"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/brand_accent"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvStatsDetails"
@@ -83,9 +154,10 @@
                 android:text="Calcul des statistiques..."
                 android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
-                android:background="#FFFFFF"
+                android:background="@drawable/bg_stat_card"
                 android:elevation="2dp"
-                android:padding="12dp"/>
+                android:padding="12dp"
+                android:layout_marginBottom="12dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -148,5 +220,5 @@
                 app:icon="@android:drawable/ic_menu_save"/>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

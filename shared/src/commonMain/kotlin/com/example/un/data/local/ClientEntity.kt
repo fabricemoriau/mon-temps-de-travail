@@ -2,12 +2,12 @@ package com.example.un.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.UUID
+import kotlinx.datetime.Clock
 
 @Entity(tableName = "clients")
 data class ClientEntity(
     @PrimaryKey 
-    val id: String = UUID.randomUUID().toString(),
+    val id: String = "", 
     val nom: String = "",
     val prenom: String = "",
     val tel: String = "",
@@ -18,8 +18,8 @@ data class ClientEntity(
     val longitude: Double? = null,
     
     // Champs de synchronisation professionnelle
-    val updatedAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = Clock.System.now().toEpochMilliseconds(),
     val isDeleted: Boolean = false,
-    val isSynced: Boolean = false, // false = doit être envoyé à Firebase
+    val isSynced: Boolean = false,
     val creatorId: String = ""
 )

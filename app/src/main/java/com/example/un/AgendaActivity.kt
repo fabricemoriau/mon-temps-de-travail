@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +40,7 @@ class AgendaActivity : AppCompatActivity() {
     private lateinit var cbRepas: CheckBox
     private lateinit var cbGardeJour: CheckBox
     private lateinit var cbGardeNuit: CheckBox
+    private lateinit var cbAllSup: CheckBox
 
     private val idToKey = mapOf(
         R.id.btnDebutTravail to "START",
@@ -70,7 +73,7 @@ class AgendaActivity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.btnSelectDate).setOnClickListener { showDatePicker() }
         
-        val checkBoxes = listOf(cbRepas, cbGardeJour, cbGardeNuit)
+        val checkBoxes = listOf(cbRepas, cbGardeJour, cbGardeNuit, cbAllSup)
         checkBoxes.forEach { it.setOnCheckedChangeListener { _, isChecked -> 
             if (isChecked) {
                 if (it.id == R.id.cbGardeJour) {
@@ -82,9 +85,21 @@ class AgendaActivity : AppCompatActivity() {
                 }
             }
             calculateTimes() 
+            autoSave()
         } }
 
-        swIsRTT.setOnCheckedChangeListener { _, isChecked -> toggleRTTMode(isChecked) }
+        swIsRTT.setOnCheckedChangeListener { _, isChecked -> 
+            toggleRTTMode(isChecked)
+            autoSave()
+        }
+
+        val textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) { autoSave() }
+        }
+        etVehiculeType.addTextChangedListener(textWatcher)
+        etVehiculeNum.addTextChangedListener(textWatcher)
 
         findViewById<Button>(R.id.btnSaveWorkDay).setOnClickListener { saveToDatabase() }
         findViewById<Button>(R.id.btnDeleteWorkDay).setOnClickListener { confirmDelete() }
@@ -147,6 +162,7 @@ class AgendaActivity : AppCompatActivity() {
         cbRepas = findViewById(R.id.cbRepasSup)
         cbGardeJour = findViewById(R.id.cbGardeJour)
         cbGardeNuit = findViewById(R.id.cbGardeNuit)
+        cbAllSup = findViewById(R.id.cbAllSup)
     }
 
     private fun toggleRTTMode(isRTT: Boolean) {
@@ -191,6 +207,8 @@ class AgendaActivity : AppCompatActivity() {
             times[id] = null
             findViewById<Button>(id).text = "--:--"
         }
+        checkMealAllowanceAuto()
+        autoSave()
     }
 
     private fun updateDateDisplay() {
@@ -260,6 +278,7 @@ class AgendaActivity : AppCompatActivity() {
             cbRepas.isChecked = wd.hasExtraRepas
             cbGardeJour.isChecked = wd.isGardeJour
             cbGardeNuit.isChecked = wd.isGardeNuit
+            cbAllSup.isChecked = wd.isAllSup
 
             idToKey.forEach { (id, _) ->
                 val millis = when(id) {
@@ -293,6 +312,7 @@ class AgendaActivity : AppCompatActivity() {
         cbRepas.isChecked = false
         cbGardeJour.isChecked = false
         cbGardeNuit.isChecked = false
+        cbAllSup.isChecked = false
         etVehiculeType.setText("")
         etVehiculeNum.setText("")
     }
@@ -309,8 +329,18 @@ class AgendaActivity : AppCompatActivity() {
                 }
                 times[buttonId] = cal
                 button.text = String.format("%02d:%02d", hour, minute)
+                checkMealAllowanceAuto()
                 calculateTimes()
+                autoSave()
             }, initialCal.get(Calendar.HOUR_OF_DAY), initialCal.get(Calendar.MINUTE), true).show()
+        }
+        button.setOnLongClickListener {
+            times[buttonId] = null
+            button.text = "--:--"
+            checkMealAllowanceAuto()
+            calculateTimes()
+            autoSave()
+            true
         }
     }
 
@@ -326,30 +356,36 @@ class AgendaActivity : AppCompatActivity() {
         val start = times[R.id.btnDebutTravail]
         val end = times[R.id.btnFinTravail]
 
-        if (start == null || end == null) return
+        if (start == null || end == null) {
+            tvAmplitude.text = "Amplitude : --:--"
+            tvTempsEffectif.text = "Temps effectif : --:--"
+            tvHeuresSup.text = "Heures Supp : --:--"
+            tvHeuresNuit.text = "Heures Nuit : --:--"
+            return
+        }
 
         var amplitudeMillis = end.timeInMillis - start.timeInMillis
         if (amplitudeMillis < 0) amplitudeMillis += 24 * 60 * 60 * 1000
 
-        var totalPauseMillis = 0L
-        totalPauseMillis += getDuration(R.id.btnPause1Debut, R.id.btnPause1Fin)
-        totalPauseMillis += getDuration(R.id.btnRepasDebut, R.id.btnRepasFin)
-        totalPauseMillis += getDuration(R.id.btnPause2Debut, R.id.btnPause2Fin)
-        totalPauseMillis += getDuration(R.id.btnPauseNuitDebut, R.id.btnPauseNuitFin)
-
-        var effectiveMillis = amplitudeMillis - totalPauseMillis
-        
         if (cbGardeJour.isChecked || cbGardeNuit.isChecked) {
-            effectiveMillis = 12 * 60 * 60 * 1000L
+            amplitudeMillis = 12 * 60 * 60 * 1000L
         }
 
-        val baseMillis = (8.5 * 60 * 60 * 1000).toLong() // 8h30
-        var supMillis = 0L
-        if (effectiveMillis > baseMillis) {
-            val diff = effectiveMillis - baseMillis
-            val diffMinutes = diff / (1000 * 60)
-            val roundedMinutes = (diffMinutes / 15) * 15
-            supMillis = roundedMinutes * 60 * 1000
+        var effectiveMillis = amplitudeMillis // Les pauses ne sont plus déduites selon la demande
+        
+        // Logic Panier Repas Auto supprimée d'ici pour permettre le décochage manuel
+        // checkMealAllowanceAuto()
+
+        val supMillis = if (cbAllSup.isChecked) {
+            amplitudeMillis
+        } else {
+            val baseMillis = (8.5 * 60 * 60 * 1000).toLong() // 8h30
+            if (amplitudeMillis > baseMillis) {
+                val diff = amplitudeMillis - baseMillis
+                val diffMinutes = diff / (1000 * 60)
+                val roundedMinutes = (diffMinutes / 15) * 15 // Arrondi au quart d'heure
+                roundedMinutes.toLong() * 60 * 1000
+            } else 0L
         }
 
         val nightMillis = calculateNightMillis(start, end)
@@ -375,6 +411,41 @@ class AgendaActivity : AppCompatActivity() {
         return diff
     }
 
+    private fun checkMealAllowanceAuto() {
+        // Ne pas auto-cocher en mode RTT
+        if (swIsRTT.isChecked) return
+
+        // Forcer le repas pour les Gardes de 12h (Jour ou Nuit)
+        if (cbGardeJour.isChecked || cbGardeNuit.isChecked) {
+            cbRepas.isChecked = true
+            return
+        }
+
+        val rStart = times[R.id.btnRepasDebut]
+        val rEnd = times[R.id.btnRepasFin]
+        
+        if (rStart == null || rEnd == null) {
+            cbRepas.isChecked = true
+            return
+        }
+
+        var duration = rEnd.timeInMillis - rStart.timeInMillis
+        if (duration < 0) duration += 24 * 60 * 60 * 1000
+
+        val startHour = rStart.get(Calendar.HOUR_OF_DAY)
+        val endHour = rEnd.get(Calendar.HOUR_OF_DAY)
+        val endMin = rEnd.get(Calendar.MINUTE)
+
+        val isTooShort = duration < 45 * 60 * 1000
+        val isOutOfRange = startHour < 11 || endHour > 14 || (endHour == 14 && endMin > 0)
+
+        if (isTooShort || isOutOfRange) {
+            cbRepas.isChecked = true
+        } else {
+            cbRepas.isChecked = false
+        }
+    }
+
     private fun calculateNightMillis(start: Calendar, end: Calendar): Long {
         var nightDuration = 0L
         val current = start.clone() as Calendar
@@ -387,6 +458,80 @@ class AgendaActivity : AppCompatActivity() {
             current.add(Calendar.MINUTE, 1)
         }
         return nightDuration
+    }
+
+    /**
+     * Sauvegarde automatique silencieuse de l'état actuel de la saisie.
+     */
+    private fun autoSave() {
+        val dateId = sdfDate.format(selectedDate.time)
+        val isRTT = swIsRTT.isChecked
+        
+        val start = times[R.id.btnDebutTravail]
+        val end = times[R.id.btnFinTravail]
+        
+        val wd = if (isRTT) {
+            WorkDayEntity(
+                dateId = dateId,
+                timestamp = selectedDate.timeInMillis,
+                isRTT = true
+            )
+        } else {
+            var amplitude = if (start != null && end != null) {
+                var diff = end.timeInMillis - start.timeInMillis
+                if (diff < 0) diff += 24 * 60 * 60 * 1000
+                diff
+            } else 0L
+
+            var effective = amplitude // Pauses non déduites
+            if (cbGardeJour.isChecked || cbGardeNuit.isChecked) {
+                amplitude = 12 * 60 * 60 * 1000L
+                effective = 12 * 60 * 60 * 1000L
+            }
+
+            val sup = if (cbAllSup.isChecked) {
+                amplitude
+            } else {
+                val base = (8.5 * 60 * 60 * 1000).toLong()
+                if (amplitude > base) {
+                    val diffMin = (amplitude - base) / 60000
+                    (diffMin / 15 * 15) * 60000
+                } else 0L
+            }
+            
+            val night = if (start != null && end != null) calculateNightMillis(start, end) else 0L
+
+            WorkDayEntity(
+                dateId = dateId,
+                timestamp = selectedDate.timeInMillis,
+                vehiculeType = etVehiculeType.text.toString(),
+                vehiculeNum = etVehiculeNum.text.toString(),
+                startMillis = start?.timeInMillis ?: 0,
+                endMillis = end?.timeInMillis ?: 0,
+                pause1Start = times[R.id.btnPause1Debut]?.timeInMillis ?: 0,
+                pause1End = times[R.id.btnPause1Fin]?.timeInMillis ?: 0,
+                repasStart = times[R.id.btnRepasDebut]?.timeInMillis ?: 0,
+                repasEnd = times[R.id.btnRepasFin]?.timeInMillis ?: 0,
+                pause2Start = times[R.id.btnPause2Debut]?.timeInMillis ?: 0,
+                pause2End = times[R.id.btnPause2Fin]?.timeInMillis ?: 0,
+                pauseNuitStart = times[R.id.btnPauseNuitDebut]?.timeInMillis ?: 0,
+                pauseNuitEnd = times[R.id.btnPauseNuitFin]?.timeInMillis ?: 0,
+                amplitudeMillis = amplitude,
+                effectiveMillis = effective,
+                nightMillis = night,
+                supMillis = sup,
+                hasExtraRepas = cbRepas.isChecked,
+                isGardeJour = cbGardeJour.isChecked,
+                isGardeNuit = cbGardeNuit.isChecked,
+                isAllSup = cbAllSup.isChecked,
+                isRTT = false
+            )
+        }
+
+        lifecycleScope.launch {
+            AppDatabase.getDatabase(this@AgendaActivity).workDayDao().insert(wd)
+            lastLoadedWorkDay = wd
+        }
     }
 
     private fun saveToDatabase() {
@@ -407,19 +552,24 @@ class AgendaActivity : AppCompatActivity() {
                 isRTT = true
             )
         } else {
-            val amplitude = end!!.timeInMillis - start!!.timeInMillis
-            val pause = getDuration(R.id.btnPause1Debut, R.id.btnPause1Fin) +
-                        getDuration(R.id.btnRepasDebut, R.id.btnRepasFin) +
-                        getDuration(R.id.btnPause2Debut, R.id.btnPause2Fin) +
-                        getDuration(R.id.btnPauseNuitDebut, R.id.btnPauseNuitFin)
+            var amplitude = end!!.timeInMillis - start!!.timeInMillis
+            if (amplitude < 0) amplitude += 24 * 60 * 60 * 1000
             
-            var effective = amplitude - pause
+            var effective = amplitude
             if (cbGardeJour.isChecked || cbGardeNuit.isChecked) {
+                amplitude = 12 * 60 * 60 * 1000L
                 effective = 12 * 60 * 60 * 1000L
             }
 
-            val base = (8.5 * 60 * 60 * 1000).toLong()
-            val sup = if (effective > base) ((effective - base) / (60000 * 15) * 15) * 60000 else 0L
+            val sup = if (cbAllSup.isChecked) {
+                amplitude
+            } else {
+                val base = (8.5 * 60 * 60 * 1000).toLong()
+                if (amplitude > base) {
+                    val diffMin = (amplitude - base) / 60000
+                    (diffMin / 15 * 15) * 60000
+                } else 0L
+            }
 
             WorkDayEntity(
                 dateId = dateId,
@@ -443,6 +593,7 @@ class AgendaActivity : AppCompatActivity() {
                 hasExtraRepas = cbRepas.isChecked,
                 isGardeJour = cbGardeJour.isChecked,
                 isGardeNuit = cbGardeNuit.isChecked,
+                isAllSup = cbAllSup.isChecked,
                 isRTT = false
             )
         }

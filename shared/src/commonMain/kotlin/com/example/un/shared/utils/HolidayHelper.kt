@@ -1,13 +1,13 @@
 package com.example.un.utils
 
-import java.util.*
+import kotlinx.datetime.*
 
 object HolidayHelper {
 
-    fun isHoliday(calendar: Calendar): Boolean {
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val month = calendar.get(Calendar.MONTH) + 1 // 1-12
-        val year = calendar.get(Calendar.YEAR)
+    fun isHoliday(date: LocalDate): Boolean {
+        val day = date.dayOfMonth
+        val month = date.monthNumber
+        val year = date.year
 
         // Fixes
         if (day == 1 && month == 1) return true // Jour de l'an
@@ -23,29 +23,21 @@ object HolidayHelper {
         val easter = getEaster(year)
         
         // Lundi de Pâques (Pâques + 1 jour)
-        val easterMonday = easter.clone() as Calendar
-        easterMonday.add(Calendar.DAY_OF_YEAR, 1)
-        if (isSameDay(calendar, easterMonday)) return true
+        val easterMonday = easter.plus(1, DateTimeUnit.DAY)
+        if (date == easterMonday) return true
 
         // Ascension (Pâques + 39 jours)
-        val ascension = easter.clone() as Calendar
-        ascension.add(Calendar.DAY_OF_YEAR, 39)
-        if (isSameDay(calendar, ascension)) return true
+        val ascension = easter.plus(39, DateTimeUnit.DAY)
+        if (date == ascension) return true
 
         // Lundi de Pentecôte (Pâques + 50 jours)
-        val pentecostMonday = easter.clone() as Calendar
-        pentecostMonday.add(Calendar.DAY_OF_YEAR, 50)
-        if (isSameDay(calendar, pentecostMonday)) return true
+        val pentecostMonday = easter.plus(50, DateTimeUnit.DAY)
+        if (date == pentecostMonday) return true
 
         return false
     }
 
-    private fun isSameDay(c1: Calendar, c2: Calendar): Boolean {
-        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR) &&
-                c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)
-    }
-
-    private fun getEaster(year: Int): Calendar {
+    private fun getEaster(year: Int): LocalDate {
         val a = year % 19
         val b = year / 100
         val c = year % 100
@@ -61,9 +53,6 @@ object HolidayHelper {
         val month = (h + l - 7 * m + 114) / 31
         val day = ((h + l - 7 * m + 114) % 31) + 1
         
-        return Calendar.getInstance().apply {
-            set(year, month - 1, day, 0, 0, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
+        return LocalDate(year, month, day)
     }
 }

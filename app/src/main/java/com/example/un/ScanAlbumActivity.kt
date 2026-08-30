@@ -33,6 +33,7 @@ class ScanAlbumActivity : AppCompatActivity() {
     private lateinit var adapter: ScanAdapter
     private var scanType: String = "ROUTE"
     private val calendar = Calendar.getInstance()
+    private val dateFilter = androidx.lifecycle.MutableLiveData<String?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,11 @@ class ScanAlbumActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvAlbumTitle).text = title
 
         val rv = findViewById<RecyclerView>(R.id.rvScans)
-        adapter = ScanAdapter { /* Clic sur image */ }
+        adapter = ScanAdapter { scan ->
+            val intent = Intent(this, ImageDetailActivity::class.java)
+            intent.putExtra("IMAGE_PATH", scan.imagePath)
+            startActivity(intent)
+        }
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
 
@@ -66,13 +71,25 @@ class ScanAlbumActivity : AppCompatActivity() {
             generatePdf(etStart.text.toString(), etEnd.text.toString())
         }
 
-        loadScans()
+        observeScans()
+    }
+
+    private fun observeScans() {
+        dateFilter.observe(this) { date ->
+            if (date == null) {
+                AppDatabase.getDatabase(this).scanDao().getScansByType(scanType).asLiveData().observe(this) {
+                    adapter.submitList(it)
+                }
+            } else {
+                AppDatabase.getDatabase(this).scanDao().searchByDate(scanType, date).asLiveData().observe(this) {
+                    adapter.submitList(it)
+                }
+            }
+        }
     }
 
     private fun loadScans() {
-        AppDatabase.getDatabase(this).scanDao().getScansByType(scanType).asLiveData().observe(this) {
-            adapter.submitList(it)
-        }
+        dateFilter.value = null
     }
 
     private fun showDatePicker(editText: EditText) {
@@ -80,15 +97,13 @@ class ScanAlbumActivity : AppCompatActivity() {
             val date = String.format(Locale.FRANCE, "%02d/%02d/%d", d, m + 1, y)
             editText.setText(date)
             if (editText.id == R.id.etSearchDate) {
-                searchByDate(date)
+                dateFilter.value = date
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
     }
 
     private fun searchByDate(date: String) {
-        AppDatabase.getDatabase(this).scanDao().searchByDate(scanType, date).asLiveData().observe(this) {
-            adapter.submitList(it)
-        }
+        // Obsolete
     }
 
     private fun generatePdf(startStr: String, endStr: String) {
@@ -101,22 +116,46 @@ class ScanAlbumActivity : AppCompatActivity() {
             try {
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
                 val start = sdf.parse(startStr)?.time ?: 0L
-                val end = (sdf.parse(endStr)?.time ?: 0L) + 86400000 // +1 jour pour inclure la fin
+                val calendarEnd = Calendar.getInstance().apply {
+                    time = sdf.parse(endStr) ?: Date()
+                    set(Calendar.HOUR_OF_DAY, 23)
+                    set(Calendar.MINUTE, 59)
+                    set(Calendar.SECOND, 59)
+                }
+                val end = calendarEnd.timeInMillis
 
                 val scans = AppDatabase.getDatabase(this@ScanAlbumActivity).scanDao().getScansInRange(scanType, start, end)
                 
                 if (scans.isEmpty()) {
-                    withContext(Dispatchers.Main) { Toast.makeText(this@ScanAlbumActivity, "Aucun doc trouvé", Toast.LENGTH_SHORT).show() }
+                    withContext(Dispatchers.Main) { Toast.makeText(this@ScanAlbumActivity, "Aucun doc trouvé pour cette période", Toast.LENGTH_SHORT).show() }
                     return@launch
                 }
 
                 val pdfDocument = PdfDocument()
+                val pageWidth = 595 // A4 width in points
+                val pageHeight = 842 // A4 height in points
+
                 scans.forEachIndexed { index, scan ->
-                    val bitmap = BitmapFactory.decodeFile(scan.imagePath) ?: return@forEachIndexed
-                    val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, index + 1).create()
+                    val bitmap = loadResizedBitmap(scan.imagePath, pageWidth, pageHeight) ?: return@forEachIndexed
+                    
+                    val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, index + 1).create()
                     val page = pdfDocument.startPage(pageInfo)
-                    page.canvas.drawBitmap(bitmap, 0f, 0f, null)
+                    
+                    // Calculer le ratio pour que l'image tienne dans la page A4 sans déformation
+                    val scaleX = pageWidth.toFloat() / bitmap.width
+                    val scaleY = pageHeight.toFloat() / bitmap.height
+                    val scale = Math.min(scaleX, scaleY)
+                    
+                    val left = (pageWidth - bitmap.width * scale) / 2
+                    val top = (pageHeight - bitmap.height * scale) / 2
+                    
+                    val matrix = android.graphics.Matrix()
+                    matrix.postScale(scale, scale)
+                    matrix.postTranslate(left, top)
+                    
+                    page.canvas.drawBitmap(bitmap, matrix, null)
                     pdfDocument.finishPage(page)
+                    bitmap.recycle()
                 }
 
                 val fileName = "Export_${scanType}_${System.currentTimeMillis()}.pdf"
@@ -128,8 +167,42 @@ class ScanAlbumActivity : AppCompatActivity() {
                     sharePdf(file)
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { Toast.makeText(this@ScanAlbumActivity, "Erreur PDF", Toast.LENGTH_SHORT).show() }
+                withContext(Dispatchers.Main) { 
+                    Toast.makeText(this@ScanAlbumActivity, "Erreur lors de la création du PDF : ${e.message}", Toast.LENGTH_LONG).show() 
+                }
             }
+        }
+    }
+
+    private fun loadResizedBitmap(path: String, maxWidth: Int, maxHeight: Int): android.graphics.Bitmap? {
+        val options = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+        }
+        
+        if (path.startsWith("content://")) {
+            val uri = Uri.parse(path)
+            contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
+        } else {
+            BitmapFactory.decodeFile(path, options)
+        }
+
+        var inSampleSize = 1
+        if (options.outHeight > maxHeight || options.outWidth > maxWidth) {
+            val halfHeight = options.outHeight / 2
+            val halfWidth = options.outWidth / 2
+            while (halfHeight / inSampleSize >= maxHeight && halfWidth / inSampleSize >= maxWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        options.inJustDecodeBounds = false
+        options.inSampleSize = inSampleSize
+        
+        return if (path.startsWith("content://")) {
+            val uri = Uri.parse(path)
+            contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
+        } else {
+            BitmapFactory.decodeFile(path, options)
         }
     }
 

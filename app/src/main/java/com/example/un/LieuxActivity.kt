@@ -2,23 +2,26 @@ package com.example.un
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
-import com.example.un.data.LieuCode
-import com.example.un.data.LocalDataManager
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.example.un.data.LieuViewModel
+import com.example.un.data.LieuViewModelFactory
+import kotlinx.coroutines.launch
 
 class LieuxActivity : AppCompatActivity() {
 
-    private lateinit var adapter: LieuAdapter
-    private val lieuxList = mutableListOf<LieuCode>()
+    private val viewModel: LieuViewModel by viewModels {
+        LieuViewModelFactory((application as MonTempsApp).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,76 +33,71 @@ class LieuxActivity : AppCompatActivity() {
         val rv = findViewById<RecyclerView>(R.id.rvLieux)
         rv.layoutManager = LinearLayoutManager(this)
         
-        setupFirebaseListener()
+        val adapter = LieuAdapter(mutableListOf(), { lieu ->
+            val intent = Intent(this, AddLieuActivity::class.java)
+            intent.putExtra("LIEU_ID", lieu.id)
+            startActivity(intent)
+        }, { lieu ->
+            confirmDelete(lieu.id)
+        })
+        rv.adapter = adapter
+
+        findViewById<android.widget.EditText>(R.id.etSearchLieu).addTextChangedListener(object : android.text.TextWatcher {
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val query = s.toString().lowercase().trim()
+                viewModel.allLieux.value?.let { lieux ->
+                    val filtered = lieux.filter { 
+                        it.nomLieu.lowercase().contains(query) || it.code.lowercase().contains(query) || it.adresse.lowercase().contains(query)
+                    }.map { 
+                        com.example.un.data.LieuCode(
+                            it.id, it.nomLieu, it.code, it.adresse, it.tel, it.notes, 
+                            it.latitude, it.longitude, it.creatorId, it.lastModified
+                        )
+                    }
+                    adapter.updateList(filtered)
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        viewModel.allLieux.observe(this) { lieux ->
+            // On convertit LieuEntity en LieuCode pour l'adapter (compatibilité)
+            val legacyList = lieux.map { 
+                com.example.un.data.LieuCode(
+                    it.id, it.nomLieu, it.code, it.adresse, it.tel, it.notes, 
+                    it.latitude, it.longitude, it.creatorId, it.lastModified
+                )
+            }
+            adapter.updateList(legacyList)
+        }
 
         findViewById<Button>(R.id.btnAddLieu).setOnClickListener {
             startActivity(Intent(this, AddLieuActivity::class.java))
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshList()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_sync, menu)
+        return true
     }
 
-    private fun setupFirebaseListener() {
-        LocalDataManager.getSharedFirebaseRef("lieux_codes")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val remoteLieux = mutableListOf<LieuCode>()
-                    val remoteIds = mutableSetOf<String>()
-                    
-                    for (child in snapshot.children) {
-                        val lieu = child.getValue(LieuCode::class.java)
-                        if (lieu != null && lieu.id.isNotEmpty()) {
-                            remoteLieux.add(lieu)
-                            remoteIds.add(lieu.id)
-                        }
-                    }
-                    
-                    val localLieux = LocalDataManager.loadLieux(this@LieuxActivity)
-                    
-                    // 1. Supprimer localement ce qui n'est plus sur Firebase
-                    localLieux.forEach { local ->
-                        if (!remoteIds.contains(local.id)) {
-                            LocalDataManager.deleteIndividualItem(this@LieuxActivity, "lieux_codes", local.id)
-                        }
-                    }
-                    
-                    // 2. Fusionner
-                    val finalList = LocalDataManager.mergeLists(localLieux.filter { remoteIds.contains(it.id) }, remoteLieux) { it.id }
-                    
-                    // 3. Sauvegarde locale miroir
-                    finalList.forEach { LocalDataManager.updateLieuLocally(this@LieuxActivity, it) }
-                    
-                    refreshList()
-                }
-                override fun onCancelled(error: DatabaseError) {}
-            })
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_sync) {
+            lifecycleScope.launch {
+                (application as MonTempsApp).repository.forceSyncAll()
+            }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
-    private fun refreshList() {
-        lieuxList.clear()
-        lieuxList.addAll(LocalDataManager.loadLieux(this).sortedBy { it.nomLieu.lowercase() })
-        
-        adapter = LieuAdapter(lieuxList, { lieu ->
-            val intent = Intent(this, AddLieuActivity::class.java)
-            intent.putExtra("LIEU_ID", lieu.id)
-            startActivity(intent)
-        }, { lieu ->
-            confirmDelete(lieu)
-        })
-        findViewById<RecyclerView>(R.id.rvLieux).adapter = adapter
-    }
-
-    private fun confirmDelete(lieu: LieuCode) {
+    private fun confirmDelete(id: String) {
         AlertDialog.Builder(this)
             .setTitle("Supprimer le code")
             .setMessage("Voulez-vous supprimer ce lieu du téléphone et du partage ?")
             .setPositiveButton("Supprimer") { _, _ ->
-                LocalDataManager.getSharedFirebaseRef("lieux_codes").child(lieu.id).removeValue()
-                LocalDataManager.deleteIndividualItem(this, "lieux_codes", lieu.id)
-                refreshList()
+                viewModel.deleteLieu(id)
                 Toast.makeText(this, "Code supprimé", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Annuler", null)

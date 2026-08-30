@@ -1,10 +1,13 @@
 package com.example.un
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
 import com.example.un.data.local.AppDatabase
 import com.example.un.data.AdminConfig
+import com.example.un.utils.AppUpdateManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AppUpdateManager.checkUpdates(this)
 
         checkIfBlocked()
 
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnGoToSharedMessaging).setOnClickListener {
-            startActivity(Intent(this, SharedMessagingActivity::class.java))
+            startActivity(Intent(this, ForumActivity::class.java))
         }
 
         findViewById<Button>(R.id.btnGoToAgenda).setOnClickListener {
@@ -79,12 +85,94 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ColleguesActivity::class.java))
         }
 
+        findViewById<Button>(R.id.btnCheckUpdate).setOnClickListener {
+            AppUpdateManager.checkUpdates(this, manualCheck = true)
+        }
+
+        val btnPublish = findViewById<Button>(R.id.btnPublishUpdate)
+        if (AdminConfig.isMaster(this)) {
+            btnPublish.visibility = View.VISIBLE
+            btnPublish.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle("Publication de version")
+                    .setMessage("Voulez-vous définir cette version (${packageManager.getPackageInfo(packageName, 0).versionName}) comme la dernière version officielle sur Internet ?")
+                    .setPositiveButton("Publier") { _, _ ->
+                        AppUpdateManager.publishCurrentVersion(this)
+                    }
+                    .setNegativeButton("Annuler", null)
+                    .show()
+            }
+        }
+
+        monitorConnection()
         checkYesterdayEntry()
+        performDiagnostic()
+    }
+
+    private fun performDiagnostic() {
+        val tvStatus = findViewById<TextView>(R.id.tvConnectionStatus)
+        val database = FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL)
+        val rootRef = database.reference
+        
+        // 1. Test d'écriture simple
+        rootRef.child("shared/diagnostic").setValue(mapOf("time" to System.currentTimeMillis())).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // 2. Scan de la structure si l'écriture marche
+                rootRef.get().addOnSuccessListener { snapshot ->
+                    val dossiers = snapshot.children.mapNotNull { it.key }.joinToString(", ")
+                    val patientCount = snapshot.child("shared/clients").childrenCount
+                    val msg = "✅ OK | Patients: $patientCount | Dossiers: $dossiers"
+                    tvStatus.text = msg
+                    tvStatus.setTextColor(Color.parseColor("#2E7D32"))
+                    Log.d("Diagnostic", msg)
+                }.addOnFailureListener {
+                    tvStatus.text = "❌ Erreur Lecture : ${it.message}"
+                }
+            } else {
+                val error = task.exception?.message ?: "Erreur inconnue"
+                tvStatus.text = "❌ Erreur Partage : $error"
+                tvStatus.setTextColor(Color.RED)
+                if (error.contains("Permission denied", ignoreCase = true)) {
+                    showFirebaseSetupAlert()
+                }
+            }
+        }
+    }
+
+    private fun showFirebaseSetupAlert() {
+        AlertDialog.Builder(this)
+            .setTitle("Paramétrage Firebase Incomplet")
+            .setMessage("L'application n'a pas l'autorisation d'écrire sur Firebase.\n\n" +
+                    "Vérifiez l'onglet 'Règles' dans votre console Firebase Realtime Database.\n" +
+                    "Les règles doivent autoriser '.read' et '.write' à 'true'.")
+            .setPositiveButton("J'ai compris", null)
+            .show()
+    }
+
+    private fun monitorConnection() {
+        val tvStatus = findViewById<TextView>(R.id.tvConnectionStatus)
+        val connectedRef = FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL).getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    tvStatus.text = getString(R.string.msg_connected)
+                    tvStatus.setTextColor(Color.GREEN)
+                } else {
+                    tvStatus.text = getString(R.string.msg_not_connected)
+                    tvStatus.setTextColor(Color.RED)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     private fun checkIfBlocked() {
+        // Un utilisateur Maître ne peut pas être bloqué localement (sécurité)
+        if (AdminConfig.isMaster(this)) return
+
         val userId = LocalDataManager.getUserId(this)
-        val blockedRef = FirebaseDatabase.getInstance().getReference(AdminConfig.PATH_BLOCKED_USERS).child(userId)
+        val blockedRef = FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL).getReference(AdminConfig.PATH_BLOCKED_USERS).child(userId)
         
         blockedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

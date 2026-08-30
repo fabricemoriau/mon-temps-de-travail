@@ -88,7 +88,7 @@ object PdfGenerator {
         return file
     }
 
-    fun generateSalaryReport(context: Context, monthName: String, details: String, totalBrut: String, userName: String): File? {
+    fun generateSalaryReport(context: Context, monthName: String, details: String, totalNet: String, userName: String): File? {
         val pdfDocument = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
         val page = pdfDocument.startPage(pageInfo)
@@ -130,7 +130,7 @@ object PdfGenerator {
         paint.textSize = 18f
         paint.isFakeBoldText = true
         paint.color = Color.parseColor("#303F9F")
-        canvas.drawText(totalBrut, 50f, y, paint)
+        canvas.drawText(totalNet, 50f, y, paint)
 
         paint.textSize = 10f
         paint.color = Color.GRAY

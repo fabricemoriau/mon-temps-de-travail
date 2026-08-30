@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
-import com.example.un.data.Collegue
-import com.example.un.data.LocalDataManager
+import com.example.un.data.*
 
 class MessageGroupActivity : AppCompatActivity() {
 
-    private val colleguesList = mutableListOf<Collegue>()
+    private val viewModel: CollegueViewModel by viewModels {
+        CollegueViewModelFactory((application as MonTempsApp).repository)
+    }
+
+    private val colleguesList = mutableListOf<com.example.un.data.Collegue>()
     private val selectedIds = mutableSetOf<String>()
     private lateinit var adapter: SelectableCollegueAdapter
 
@@ -35,6 +39,14 @@ class MessageGroupActivity : AppCompatActivity() {
         }
         rv.adapter = adapter
 
+        viewModel.allCollegues.observe(this) { collegues ->
+            colleguesList.clear()
+            colleguesList.addAll(collegues.map { 
+                com.example.un.data.Collegue(it.id, it.nom, it.prenom, it.tel)
+            })
+            adapter.notifyDataSetChanged()
+        }
+
         findViewById<Button>(R.id.btnSendToAll).setOnClickListener {
             val msg = etMessage.text.toString()
             if (msg.isNotEmpty()) {
@@ -53,23 +65,13 @@ class MessageGroupActivity : AppCompatActivity() {
                 Toast.makeText(this, "Sélectionnez des collègues et tapez un message", Toast.LENGTH_SHORT).show()
             }
         }
-
-        loadColleguesFromLocal()
-    }
-
-    private fun loadColleguesFromLocal() {
-        val localData = LocalDataManager.loadCollegues(this)
-        colleguesList.clear()
-        colleguesList.addAll(localData)
-        adapter.notifyDataSetChanged()
-        
-        if (colleguesList.isEmpty()) {
-            Toast.makeText(this, "Aucun collègue enregistré", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun sendSmsTo(numbers: List<String>, message: String) {
-        val numbersString = numbers.joinToString(";")
+        // Nettoyer les numéros pour enlever les noms de sociétés entre parenthèses
+        // et ne garder que les caractères valides pour un numéro
+        val cleanNumbers = numbers.map { it.substringBefore("(").filter { c -> c.isDigit() || c == '+' } }
+        val numbersString = cleanNumbers.joinToString(";")
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("smsto:$numbersString")
             putExtra("sms_body", message)

@@ -2,29 +2,38 @@ package com.example.un.data
 
 import androidx.lifecycle.*
 import com.example.un.data.local.ClientEntity
+import com.example.un.utils.SearchUtils
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class ClientViewModel(private val repository: ClientRepository) : ViewModel() {
+class ClientViewModel(private val repository: AppRepository) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
     
-    // La liste des clients est filtrée automatiquement en temps réel
     val filteredClients: LiveData<List<ClientEntity>> = combine(
         repository.allClients,
         _searchQuery
     ) { clients, query ->
+        val visibleClients = clients.filter { !it.isDeleted }
         if (query.isEmpty()) {
-            clients
+            visibleClients
         } else {
-            clients.filter {
-                it.nom.contains(query, ignoreCase = true) ||
-                it.prenom.contains(query, ignoreCase = true) ||
-                it.tel.contains(query, ignoreCase = true) ||
-                it.adresse.contains(query, ignoreCase = true)
+            visibleClients.filter { client ->
+                SearchUtils.matches(
+                    query,
+                    client.nom,
+                    client.prenom,
+                    client.tel,
+                    client.adresse,
+                    client.notes
+                )
             }
         }
     }.asLiveData()
+
+    fun getClient(id: String): LiveData<ClientEntity?> {
+        return repository.getClientFlow(id).asLiveData()
+    }
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
@@ -39,7 +48,7 @@ class ClientViewModel(private val repository: ClientRepository) : ViewModel() {
     }
 }
 
-class ClientViewModelFactory(private val repository: ClientRepository) : ViewModelProvider.Factory {
+class ClientViewModelFactory(private val repository: AppRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ClientViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

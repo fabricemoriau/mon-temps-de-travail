@@ -14,6 +14,9 @@ interface ScanDao {
     @Query("SELECT * FROM scans WHERE type = :type AND timestamp BETWEEN :start AND :end")
     suspend fun getScansInRange(type: String, start: Long, end: Long): List<ScanEntity>
 
+    @Query("SELECT * FROM scans")
+    suspend fun getAllScansList(): List<ScanEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(scan: ScanEntity)
 

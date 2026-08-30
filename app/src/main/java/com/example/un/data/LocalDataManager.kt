@@ -15,27 +15,21 @@ object LocalDataManager {
 
     fun getUserId(context: Context): String {
         val sharedPref = context.getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-        val nom = sharedPref.getString("nom", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
-        val prenom = sharedPref.getString("prenom", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
-        val tel = sharedPref.getString("tel", "")?.lowercase()?.trim()?.replace(" ", "") ?: ""
+        val nom = sharedPref.getString("nom", "")?.lowercase()?.trim()?.replace(Regex("[^a-z0-9]"), "") ?: ""
+        val prenom = sharedPref.getString("prenom", "")?.lowercase()?.trim()?.replace(Regex("[^a-z0-9]"), "") ?: ""
+        val tel = sharedPref.getString("tel", "")?.lowercase()?.trim()?.replace(Regex("[^0-9]"), "") ?: ""
         
         return if (nom.isNotEmpty() && prenom.isNotEmpty() && tel.isNotEmpty()) {
             "${nom}_${prenom}_$tel"
         } else {
-            // ID temporaire basé sur l'installation si profil incomplet
             val tempId = sharedPref.getString("temp_device_id", UUID.randomUUID().toString())
             sharedPref.edit().putString("temp_device_id", tempId).apply()
-            tempId!!
+            tempId!!.replace(Regex("[^a-z0-9-]"), "")
         }
     }
 
-    fun getFirebaseRef(context: Context, nodeName: String): DatabaseReference {
-        val userId = getUserId(context)
-        return FirebaseDatabase.getInstance().getReference("users").child(userId).child(nodeName)
-    }
-
     fun getSharedFirebaseRef(nodeName: String): DatabaseReference {
-        return FirebaseDatabase.getInstance().getReference("shared").child(nodeName)
+        return FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL).getReference("shared").child(nodeName)
     }
 
     fun getDataSubDir(context: Context, subDirName: String): File {
@@ -74,46 +68,7 @@ object LocalDataManager {
         } catch (e: Exception) {}
     }
 
-    /**
-     * Fusionne deux listes en privilégiant le plus récent (via Timestamp).
-     */
-    fun <T : Any> mergeLists(local: List<T>, remote: List<T>, idSelector: (T) -> String): List<T> {
-        val resultMap = mutableMapOf<String, T>()
-        local.forEach { 
-            val id = idSelector(it)
-            if (id.isNotEmpty()) resultMap[id] = it 
-        }
-        remote.forEach { remoteItem ->
-            val id = idSelector(remoteItem)
-            if (id.isEmpty()) return@forEach
-            
-            val localItem = resultMap[id]
-            
-            if (localItem == null) {
-                resultMap[id] = remoteItem
-            } else {
-                val remoteTs = getTimestamp(remoteItem)
-                val localTs = getTimestamp(localItem)
-                if (remoteTs > localTs) {
-                    resultMap[id] = remoteItem
-                }
-            }
-        }
-        return resultMap.values.toList()
-    }
-
-    private fun getTimestamp(item: Any): Long {
-        return when (item) {
-            is com.example.un.data.local.ClientEntity -> item.updatedAt
-            is com.example.un.data.LieuCode -> item.lastModified
-            else -> 0L
-        }
-    }
-
-    fun loadLieux(context: Context): List<LieuCode> = loadIndividualItems(context, "lieux_codes")
-    fun updateLieuLocally(context: Context, lieu: LieuCode) = saveIndividualItem(context, "lieux_codes", lieu.id, lieu)
-    fun loadCollegues(context: Context): List<Collegue> = loadIndividualItems(context, "collegues")
-    fun updateCollegueLocally(context: Context, col: Collegue) = saveIndividualItem(context, "collegues", col.id, col)
+    // Utile pour les documents obligatoires (restent en local file pour le moment)
     fun loadDocs(context: Context): List<DocumentObligatoire> = loadIndividualItems(context, "docs")
     fun updateDocLocally(context: Context, doc: DocumentObligatoire) = saveIndividualItem(context, "docs", doc.id, doc)
 }

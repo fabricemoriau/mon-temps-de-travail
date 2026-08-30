@@ -14,7 +14,7 @@ import com.example.un.data.Collegue
 import com.example.un.data.LocalDataManager
 
 class CollegueAdapter(
-    private val list: List<Collegue>,
+    private var list: List<Collegue>,
     private val onEdit: (Collegue) -> Unit,
     private val onDelete: (Collegue) -> Unit
 ) : RecyclerView.Adapter<CollegueAdapter.ViewHolder>() {
@@ -25,6 +25,11 @@ class CollegueAdapter(
         val btnCall: Button = view.findViewById(R.id.btnCallCollegue)
         val btnEdit: Button = view.findViewById(R.id.btnEditCollegue)
         val btnDelete: ImageButton = view.findViewById(R.id.btnDeleteCollegue)
+    }
+
+    fun updateList(newList: List<Collegue>) {
+        this.list = newList
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,7 +51,10 @@ class CollegueAdapter(
         
         holder.btnCall.setOnClickListener {
             if (item.tel.isNotEmpty()) {
-                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${item.tel}"))
+                // Nettoyer le numéro : on enlève tout ce qui est entre parenthèses (société) 
+                // et on ne garde que les chiffres et le '+'
+                val cleanTel = item.tel.substringBefore("(").filter { it.isDigit() || it == '+' }
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$cleanTel"))
                 holder.itemView.context.startActivity(intent)
             }
         }

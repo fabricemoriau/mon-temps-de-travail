@@ -32,6 +32,39 @@
         android:layout_marginBottom="8dp"/>
 
     <EditText
+        android:id="@+id/etLieuTel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Téléphone"
+        android:inputType="phone"
+        android:layout_marginBottom="8dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/etLieuAdresse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Adresse"
+            android:inputType="textPostalAddress"
+            android:layout_toStartOf="@+id/btnLieuGps"
+            android:layout_centerVertical="true"/>
+
+        <ImageButton
+            android:id="@+id/btnLieuGps"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="GPS"/>
+    </RelativeLayout>
+
+    <EditText
         android:id="@+id/etLieuNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

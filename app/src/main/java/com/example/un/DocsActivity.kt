@@ -38,7 +38,9 @@ class DocsActivity : AppCompatActivity() {
     private fun refreshList() {
         val docs = LocalDataManager.loadDocs(this)
         adapter = DocAdapter(docs) { doc ->
-            // Detail logic
+            val intent = Intent(this, ImageDetailActivity::class.java)
+            intent.putExtra("IMAGE_PATH", doc.imageUri)
+            startActivity(intent)
         }
         findViewById<RecyclerView>(R.id.rvDocs).adapter = adapter
     }

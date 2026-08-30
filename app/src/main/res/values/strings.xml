@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Mon Temps de Travail</string>
-    <string name="title_main">MON TEMPS DE TRAVAIL</string>
+    <string name="app_name">final 1</string>
+    <string name="title_main">FINAL 1</string>
     <string name="btn_start">Démarrer</string>
     <string name="btn_stop">Arrêter</string>
     <string name="btn_reset">Réinitialiser</string>
@@ -70,12 +70,12 @@
     <string name="title_stats">Analyse du temps</string>
 
     <string name="title_salaire">Calcul du Salaire</string>
-    <string name="label_taux_horaire">Taux horaire brut (€)</string>
+    <string name="label_taux_horaire">Taux horaire NET (€)</string>
     <string name="label_nb_paniers">Nombre de paniers repas</string>
     <string name="label_taux_panier">Prix d\'un panier (€)</string>
     <string name="label_taches_comp">Appliquer les 5% (tâches comp.)</string>
     <string name="btn_calculate_salary">Calculer le salaire</string>
-    <string name="result_salaire_brut">Salaire Brut estimé :</string>
+    <string name="result_salaire_brut">Salaire NET estimé :</string>
     <string name="result_details">Détails : %s</string>
     <string name="hint_client_notes">Notes / Infos complémentaires</string>
     <string name="title_lieux">Codes des Lieux</string>
@@ -113,4 +113,6 @@
     <string name="label_decedee">Patient(e) décédé(e) (Masquer la fiche)</string>
     <string name="label_garde_jour">Garde de jour 12 heure</string>
     <string name="label_garde_nuit">Garde de nuit 12 h00</string>
+    <string name="msg_connected">Firebase : Connecté</string>
+    <string name="msg_not_connected">Message : Ni en ligne, ni connecté</string>
 </resources>

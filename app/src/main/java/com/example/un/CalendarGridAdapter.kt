@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
 import com.example.un.data.local.WorkDayEntity
 import com.example.un.utils.HolidayHelper
+import com.example.un.utils.toLocalDate
 import java.util.*
 
 class CalendarGridAdapter(private val onDayClick: (WorkDayEntity) -> Unit) :
@@ -47,7 +48,7 @@ class CalendarGridAdapter(private val onDayClick: (WorkDayEntity) -> Unit) :
         
         holder.tvDay.text = cal.get(Calendar.DAY_OF_MONTH).toString()
 
-        val isHoliday = HolidayHelper.isHoliday(cal)
+        val isHoliday = HolidayHelper.isHoliday(cal.toLocalDate())
         if (isHoliday) {
             holder.tvDay.setTextColor(Color.RED)
             holder.tvDay.paint.isFakeBoldText = true

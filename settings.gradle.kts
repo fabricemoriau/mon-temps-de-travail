@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "un"
 include(":app")
+include(":shared")

@@ -27,6 +27,7 @@ data class WorkDayEntity(
     val hasExtraRepas: Boolean = false,
     val isGardeJour: Boolean = false,
     val isGardeNuit: Boolean = false,
+    val isAllSup: Boolean = false,
     val isRTT: Boolean = false,
     val isVacation: Boolean = false
 )
