@@ -6,8 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-android:
-    runs-on: ubuntu-latest
+  build-and-release:
+    runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
     
@@ -23,31 +25,23 @@ jobs:
     - name: Build Android APK
       run: ./gradlew :app:assembleDebug
       
-    - name: Upload Android APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: MonTemps-Android-Debug
-        path: app/build/outputs/apk/debug/*.apk
-
-  build-ios:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      
     - name: Build iOS Framework
       run: ./gradlew :shared:assembleReleaseFramework
       
-    - name: Upload iOS Framework
-      uses: actions/upload-artifact@v4
+    - name: Prepare iOS Artifact
+      run: |
+        cd shared/build/bin/iosArm64/releaseFramework/
+        zip -r shared_framework.zip shared.framework
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: MonTemps-iOS-Framework
-        path: shared/build/bin/iosArm64/releaseFramework/shared.framework
+        tag_name: latest
+        name: Dernière Version (Auto-Build)
+        draft: false
+        prerelease: false
+        files: |
+          app/build/outputs/apk/debug/app-debug.apk
+          shared/build/bin/iosArm64/releaseFramework/shared_framework.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
