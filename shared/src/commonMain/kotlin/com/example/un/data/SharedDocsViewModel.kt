@@ -8,7 +8,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class DocsViewModel(private val coroutineScope: CoroutineScope) {
+class SharedDocsViewModel(private val coroutineScope: CoroutineScope) {
     private val scanDao = DatabaseHolder.get().scanDao()
 
     fun getScans(type: String): Flow<List<ScanEntity>> {

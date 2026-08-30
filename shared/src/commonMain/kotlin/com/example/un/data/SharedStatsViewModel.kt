@@ -10,22 +10,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 
-class StatsViewModel(private val coroutineScope: CoroutineScope) {
-    private val workDayDao = DatabaseHolder.get().workDayDao()
+class SharedStatsViewModel(private val coroutineScope: CoroutineScope) {
+    private val workDayDao by lazy { 
+        try { DatabaseHolder.get().workDayDao() } catch(e: Exception) { null }
+    }
 
     private val _stats = MutableStateFlow<MonthStats?>(null)
     val stats: StateFlow<MonthStats?> = _stats
 
     fun loadMonthStats(year: Int, month: Month) {
         coroutineScope.launch(Dispatchers.IO) {
+            val dao = workDayDao ?: return@launch
+            
             val start = LocalDateTime(year, month, 1, 0, 0).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
             
-            // Calcul du mois suivant pour la borne de fin
             val nextMonthVal = if (month.number == 12) 1 else month.number + 1
             val nextYearVal = if (month.number == 12) year + 1 else year
             val end = LocalDateTime(nextYearVal, Month(nextMonthVal), 1, 0, 0).toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds() - 1
 
-            val days = workDayDao.getWorkDaysInRange(start, end)
+            val days = dao.getWorkDaysInRange(start, end)
             
             var totalEff = 0L
             var totalAmp = 0L

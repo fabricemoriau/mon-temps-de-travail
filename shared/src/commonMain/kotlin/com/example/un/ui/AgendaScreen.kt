@@ -12,13 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.un.data.AgendaViewModel
+import com.example.un.data.SharedAgendaViewModel
 import com.example.un.data.local.WorkDayEntity
 import kotlinx.datetime.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AgendaScreen(viewModel: AgendaViewModel, onBack: () -> Unit) {
+fun AgendaScreen(viewModel: SharedAgendaViewModel, onBack: () -> Unit) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val dateId = today.toString()
     
@@ -154,7 +154,7 @@ private fun updateMillis(h: String, m: String, onUpdate: (Long) -> Unit) {
 }
 
 @Composable
-fun StatsCard(stats: AgendaViewModel.DailyStats) {
+fun StatsCard(stats: SharedAgendaViewModel.DailyStats) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)

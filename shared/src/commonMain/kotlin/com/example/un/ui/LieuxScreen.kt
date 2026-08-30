@@ -13,12 +13,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.un.data.LieuViewModel
+import com.example.un.data.SharedLieuViewModel
 import com.example.un.data.local.LieuEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LieuxScreen(viewModel: LieuViewModel, onBack: () -> Unit) {
+fun LieuxScreen(viewModel: SharedLieuViewModel, onBack: () -> Unit) {
     val lieuxList by viewModel.lieux.collectAsState(emptyList())
 
     Scaffold(

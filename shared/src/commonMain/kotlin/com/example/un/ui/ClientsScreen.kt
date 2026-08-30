@@ -16,13 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.un.data.ClientViewModel
+import com.example.un.data.SharedClientViewModel
 import com.example.un.data.local.ClientEntity
 import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClientsScreen(viewModel: ClientViewModel, onBack: () -> Unit) {
+fun ClientsScreen(viewModel: SharedClientViewModel, onBack: () -> Unit) {
     val clientList by viewModel.clients.collectAsState(emptyList())
     var searchQuery by remember { mutableStateOf("") }
     

@@ -13,12 +13,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.un.data.StatsViewModel
+import com.example.un.data.SharedStatsViewModel
 import kotlinx.datetime.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatsScreen(viewModel: StatsViewModel, onBack: () -> Unit) {
+fun StatsScreen(viewModel: SharedStatsViewModel, onBack: () -> Unit) {
     val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var currentYear by remember { mutableStateOf(now.year) }
     var currentMonth by remember { mutableStateOf(now.month) }
@@ -92,7 +92,7 @@ fun MonthSelector(year: Int, month: Month, onPrev: () -> Unit, onNext: () -> Uni
 }
 
 @Composable
-fun SummaryGrid(stats: StatsViewModel.MonthStats) {
+fun SummaryGrid(stats: SharedStatsViewModel.MonthStats) {
     Column {
         Row(modifier = Modifier.fillMaxWidth()) {
             StatItem("Travaillés", "${stats.workedDaysCount}j", Modifier.weight(1f))

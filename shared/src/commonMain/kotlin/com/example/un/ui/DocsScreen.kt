@@ -12,12 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.un.data.DocsViewModel
+import com.example.un.data.SharedDocsViewModel
 import com.example.un.data.local.ScanEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DocsScreen(viewModel: DocsViewModel, onBack: () -> Unit) {
+fun DocsScreen(viewModel: SharedDocsViewModel, onBack: () -> Unit) {
     var selectedType by remember { mutableStateOf("ROUTE") }
     val scans by viewModel.getScans(selectedType).collectAsState(emptyList())
 

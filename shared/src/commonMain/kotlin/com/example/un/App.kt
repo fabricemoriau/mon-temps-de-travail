@@ -13,22 +13,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.un.data.ClientViewModel
-import com.example.un.data.AgendaViewModel
-import com.example.un.data.StatsViewModel
-import com.example.un.data.LieuViewModel
-import com.example.un.data.DocsViewModel
+import com.example.un.data.*
 import com.example.un.ui.*
 import com.example.un.utils.openUrl
 
 @Composable
 fun App() {
     val coroutineScope = rememberCoroutineScope()
-    val clientViewModel = remember { ClientViewModel(coroutineScope) }
-    val agendaViewModel = remember { AgendaViewModel(coroutineScope) }
-    val statsViewModel = remember { StatsViewModel(coroutineScope) }
-    val lieuViewModel = remember { LieuViewModel(coroutineScope) }
-    val docsViewModel = remember { DocsViewModel(coroutineScope) }
+    val clientViewModel = remember { SharedClientViewModel(coroutineScope) }
+    val agendaViewModel = remember { SharedAgendaViewModel(coroutineScope) }
+    val statsViewModel = remember { SharedStatsViewModel(coroutineScope) }
+    val lieuViewModel = remember { SharedLieuViewModel(coroutineScope) }
+    val docsViewModel = remember { SharedDocsViewModel(coroutineScope) }
     
     var currentScreen by remember { mutableStateOf("home") }
 

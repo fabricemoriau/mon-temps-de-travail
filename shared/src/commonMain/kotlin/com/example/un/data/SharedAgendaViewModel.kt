@@ -8,18 +8,19 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 
-class AgendaViewModel(private val coroutineScope: CoroutineScope) {
-    private val workDayDao = DatabaseHolder.get().workDayDao()
+class SharedAgendaViewModel(private val coroutineScope: CoroutineScope) {
+    private val workDayDao by lazy { 
+        try { DatabaseHolder.get().workDayDao() } catch(e: Exception) { null }
+    }
 
     private val _workDay = MutableStateFlow<WorkDayEntity?>(null)
     val workDay: StateFlow<WorkDayEntity?> = _workDay
 
     fun loadDay(dateId: String, timestamp: Long) {
         coroutineScope.launch(Dispatchers.IO) {
-            val entry = workDayDao.getWorkDayById(dateId)
+            val entry = workDayDao?.getWorkDayById(dateId)
             if (entry != null) {
                 _workDay.value = entry
             } else {
@@ -33,7 +34,7 @@ class AgendaViewModel(private val coroutineScope: CoroutineScope) {
 
     fun saveDay(entry: WorkDayEntity) {
         coroutineScope.launch(Dispatchers.IO) {
-            workDayDao.insert(entry)
+            workDayDao?.insert(entry)
             _workDay.value = entry
         }
     }
