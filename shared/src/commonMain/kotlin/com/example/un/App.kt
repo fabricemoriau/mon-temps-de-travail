@@ -111,7 +111,7 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = { openUrl("https://github.com/fabricemoriau/mon-temps-de-travail/releases/tag/latest") },
+            onClick = { openUrl("https://github.com/fabricemoriau/mon-temps-de-travail/releases/tag/v1.15") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(Icons.Default.Refresh, contentDescription = null)

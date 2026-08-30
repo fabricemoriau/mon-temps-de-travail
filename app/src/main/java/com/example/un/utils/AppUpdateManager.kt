@@ -84,8 +84,8 @@ object AppUpdateManager {
             val updateInfo = AppUpdateInfo(
                 latestVersionCode = code,
                 latestVersionName = name ?: "1.0",
-                downloadUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases/tag/latest",
-                updateMessage = "Une nouvelle version stable ($name) est disponible sur GitHub avec le support iPhone !",
+                downloadUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases",
+                updateMessage = "Une nouvelle version stable ($name) est disponible sur GitHub !",
                 forceUpdate = false
             )
 

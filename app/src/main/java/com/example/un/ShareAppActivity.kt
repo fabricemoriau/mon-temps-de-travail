@@ -18,8 +18,8 @@ class ShareAppActivity : AppCompatActivity() {
         val ivAndroid = findViewById<ImageView>(R.id.ivQrAndroid)
         val ivIphone = findViewById<ImageView>(R.id.ivQrIphone)
 
-        val androidUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases/download/latest/app-debug.apk"
-        val iphoneUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases/download/latest/shared_framework.zip"
+        val androidUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases/download/v1.15/app-debug.apk"
+        val iphoneUrl = "https://github.com/fabricemoriau/mon-temps-de-travail/releases/download/v1.15/shared_framework.zip"
 
         loadQr(androidUrl, ivAndroid)
         loadQr(iphoneUrl, ivIphone)

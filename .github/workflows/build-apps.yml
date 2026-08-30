@@ -36,10 +36,11 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: latest
-        name: Dernière Version (Auto-Build)
+        tag_name: v1.15
+        name: Version 1.15 (Stable)
         draft: false
         prerelease: false
+        make_latest: true
         files: |
           app/build/outputs/apk/debug/app-debug.apk
           shared/build/bin/iosArm64/releaseFramework/shared_framework.zip
