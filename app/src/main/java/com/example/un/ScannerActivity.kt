@@ -24,7 +24,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.ScanEntity
 import com.example.un.utils.GalleryHelper
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -256,7 +256,7 @@ class ScannerActivity : AppCompatActivity() {
                         year = year
                     )
 
-                    AppDatabase.getDatabase(applicationContext).scanDao().insert(scan)
+                    DatabaseHelper.getDatabase(applicationContext).scanDao().insert(scan)
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@ScannerActivity, "Document enregistré dans l'album $subFolder !", Toast.LENGTH_SHORT).show()

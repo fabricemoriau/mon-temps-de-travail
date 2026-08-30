@@ -6,7 +6,8 @@ import android.widget.Toast
 import com.example.montempsdetravail.R
 import com.example.un.data.AdminConfig
 import com.example.un.data.AppRepository
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
+import com.example.un.data.local.DatabaseHolder
 import com.example.un.utils.NotificationHelper
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,7 +17,7 @@ import com.google.firebase.database.ValueEventListener
 class MonTempsApp : Application() {
 
     // On utilise lazy pour ne pas ralentir le démarrage
-    val database by lazy { AppDatabase.getDatabase(this) }
+    val database by lazy { DatabaseHelper.getDatabase(this) }
     val repository by lazy { 
         AppRepository(
             database.clientDao(), 
@@ -29,6 +30,7 @@ class MonTempsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        DatabaseHolder.init(DatabaseHelper.getDatabase(this))
         Log.d("MonTempsApp", "Initialisation de l'application...")
         
         NotificationHelper.createNotificationChannel(this)

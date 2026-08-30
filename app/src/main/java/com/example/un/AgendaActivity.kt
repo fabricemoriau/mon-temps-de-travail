@@ -11,7 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.WorkDayEntity
 import com.example.un.utils.ShareUtils
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -123,7 +123,7 @@ class AgendaActivity : AppCompatActivity() {
     private fun deleteWorkDay() {
         val dateId = sdfDate.format(selectedDate.time)
         lifecycleScope.launch {
-            val db = AppDatabase.getDatabase(this@AgendaActivity)
+            val db = DatabaseHelper.getDatabase(this@AgendaActivity)
             val existing = db.workDayDao().getWorkDayById(dateId)
             if (existing != null) {
                 db.workDayDao().delete(existing)
@@ -252,7 +252,7 @@ class AgendaActivity : AppCompatActivity() {
     private fun loadWorkDayFromDb() {
         val dateId = sdfDate.format(selectedDate.time)
         lifecycleScope.launch {
-            val workDay = AppDatabase.getDatabase(this@AgendaActivity).workDayDao().getWorkDayById(dateId)
+            val workDay = DatabaseHelper.getDatabase(this@AgendaActivity).workDayDao().getWorkDayById(dateId)
             lastLoadedWorkDay = workDay
             if (workDay != null) {
                 if (workDay.isVacation) {
@@ -529,7 +529,7 @@ class AgendaActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            AppDatabase.getDatabase(this@AgendaActivity).workDayDao().insert(wd)
+            DatabaseHelper.getDatabase(this@AgendaActivity).workDayDao().insert(wd)
             lastLoadedWorkDay = wd
         }
     }
@@ -599,7 +599,7 @@ class AgendaActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            AppDatabase.getDatabase(this@AgendaActivity).workDayDao().insert(wd)
+            DatabaseHelper.getDatabase(this@AgendaActivity).workDayDao().insert(wd)
             Toast.makeText(this@AgendaActivity, if (isRTT) "Journée de repos enregistrée !" else "Journée enregistrée !", Toast.LENGTH_SHORT).show()
             finish()
         }

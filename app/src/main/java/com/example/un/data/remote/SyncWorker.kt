@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.un.data.AdminConfig
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 
@@ -13,7 +13,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val database = AppDatabase.getDatabase(applicationContext)
+        val database = DatabaseHelper.getDatabase(applicationContext)
         val firebase = FirebaseDatabase.getInstance(AdminConfig.FIREBASE_URL)
         
         val clientDao = database.clientDao()

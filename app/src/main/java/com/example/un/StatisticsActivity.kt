@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.WorkDayEntity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -72,10 +72,10 @@ class StatisticsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvCurrentMonthYear).text = sdfMonth.format(currentMonth.time).replaceFirstChar { it.uppercase() }
 
         lifecycleScope.launch {
-            val days = AppDatabase.getDatabase(this@StatisticsActivity).workDayDao()
+            val days = DatabaseHelper.getDatabase(this@StatisticsActivity).workDayDao()
                 .getWorkDaysInRange(startMonth.timeInMillis, endMonth.timeInMillis)
             
-            val prevDays = AppDatabase.getDatabase(this@StatisticsActivity).workDayDao()
+            val prevDays = DatabaseHelper.getDatabase(this@StatisticsActivity).workDayDao()
                 .getWorkDaysInRange(prevMonthStart.timeInMillis, prevMonthEnd.timeInMillis)
 
             var totalMillis = 0L
@@ -197,7 +197,7 @@ class StatisticsActivity : AppCompatActivity() {
                 set(Calendar.SECOND, 59)
             }
             
-            val days = AppDatabase.getDatabase(this@StatisticsActivity).workDayDao()
+            val days = DatabaseHelper.getDatabase(this@StatisticsActivity).workDayDao()
                 .getWorkDaysInRange(startMonth.timeInMillis, endMonth.timeInMillis)
 
             val fileName = "Export_Stats_${sdfMonth.format(currentMonth.time).replace(" ", "_")}.csv"

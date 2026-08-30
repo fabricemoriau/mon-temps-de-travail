@@ -3,7 +3,7 @@ package com.example.un.utils
 import android.content.Context
 import android.net.Uri
 import com.example.un.data.local.AppBackup
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +27,7 @@ object BackupManager {
     suspend fun createBackup(context: Context): String? {
         return withContext(Dispatchers.IO) {
             try {
-                val db = AppDatabase.getDatabase(context)
+                val db = DatabaseHelper.getDatabase(context)
                 val backup = AppBackup(
                     clients = db.clientDao().getAllClientsList(),
                     workDays = db.workDayDao().getAllWorkDaysList(),
@@ -84,7 +84,7 @@ object BackupManager {
                 reader.close()
 
                 if (backup != null) {
-                    val db = AppDatabase.getDatabase(context)
+                    val db = DatabaseHelper.getDatabase(context)
                     
                     // On insère tout (Room gère le OnConflictStrategy.REPLACE par défaut dans mes DAOs)
                     backup.clients.forEach { db.clientDao().insertOrUpdate(it) }

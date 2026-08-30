@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.utils.HolidayHelper
 import com.example.un.utils.toLocalDate
 import com.example.un.utils.PdfGenerator
@@ -165,7 +165,7 @@ class SalaryActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            val days = AppDatabase.getDatabase(this@SalaryActivity).workDayDao()
+            val days = DatabaseHelper.getDatabase(this@SalaryActivity).workDayDao()
                 .getWorkDaysInRange(startCal.timeInMillis, endCal.timeInMillis)
 
             var totalEffMillis = 0L

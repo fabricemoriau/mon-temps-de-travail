@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.WorkDayEntity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -65,7 +65,7 @@ class VacationPeriodActivity : AppCompatActivity() {
     private fun saveVacationPeriod() {
         lifecycleScope.launch {
             val current = startDate.clone() as Calendar
-            val db = AppDatabase.getDatabase(this@VacationPeriodActivity)
+            val db = DatabaseHelper.getDatabase(this@VacationPeriodActivity)
             
             while (!current.after(endDate)) {
                 val dateId = sdfId.format(current.time)

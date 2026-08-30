@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.AdminConfig
 import com.example.un.utils.AppUpdateManager
 import com.google.firebase.database.DataSnapshot
@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {
         val yesterdayId = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE).format(calendar.time)
 
         lifecycleScope.launch {
-            val entry = AppDatabase.getDatabase(this@MainActivity).workDayDao().getWorkDayById(yesterdayId)
+            val entry = DatabaseHelper.getDatabase(this@MainActivity).workDayDao().getWorkDayById(yesterdayId)
             if (entry == null) {
                 showSecurityBanner()
             }

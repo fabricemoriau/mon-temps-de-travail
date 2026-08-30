@@ -18,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.ScanEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,11 +77,11 @@ class ScanAlbumActivity : AppCompatActivity() {
     private fun observeScans() {
         dateFilter.observe(this) { date ->
             if (date == null) {
-                AppDatabase.getDatabase(this).scanDao().getScansByType(scanType).asLiveData().observe(this) {
+                DatabaseHelper.getDatabase(this).scanDao().getScansByType(scanType).asLiveData().observe(this) {
                     adapter.submitList(it)
                 }
             } else {
-                AppDatabase.getDatabase(this).scanDao().searchByDate(scanType, date).asLiveData().observe(this) {
+                DatabaseHelper.getDatabase(this).scanDao().searchByDate(scanType, date).asLiveData().observe(this) {
                     adapter.submitList(it)
                 }
             }
@@ -124,7 +124,7 @@ class ScanAlbumActivity : AppCompatActivity() {
                 }
                 val end = calendarEnd.timeInMillis
 
-                val scans = AppDatabase.getDatabase(this@ScanAlbumActivity).scanDao().getScansInRange(scanType, start, end)
+                val scans = DatabaseHelper.getDatabase(this@ScanAlbumActivity).scanDao().getScansInRange(scanType, start, end)
                 
                 if (scans.isEmpty()) {
                     withContext(Dispatchers.Main) { Toast.makeText(this@ScanAlbumActivity, "Aucun doc trouvé pour cette période", Toast.LENGTH_SHORT).show() }

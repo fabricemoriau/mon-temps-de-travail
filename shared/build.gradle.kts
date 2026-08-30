@@ -4,6 +4,15 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+ksp {
+    arg("room.generateKotlin", "true")
 }
 
 kotlin {
@@ -45,7 +54,7 @@ kotlin {
 }
 
 dependencies {
-    add("kspAndroid", libs.room.compiler)
+    ksp(libs.room.compiler)
 }
 
 android {

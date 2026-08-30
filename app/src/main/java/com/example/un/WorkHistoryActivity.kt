@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.montempsdetravail.R
-import com.example.un.data.local.AppDatabase
+import com.example.un.data.local.DatabaseHelper
 import com.example.un.data.local.WorkDayEntity
 import com.example.un.utils.CalendarImporter
 import com.example.un.utils.PdfGenerator
@@ -189,7 +189,7 @@ class WorkHistoryActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val imported = CalendarImporter.importShifts(this@WorkHistoryActivity, startMonth.timeInMillis, endMonth.timeInMillis)
             if (imported.isNotEmpty()) {
-                val db = AppDatabase.getDatabase(this@WorkHistoryActivity).workDayDao()
+                val db = DatabaseHelper.getDatabase(this@WorkHistoryActivity).workDayDao()
                 imported.forEach { db.insert(it) }
                 Toast.makeText(this@WorkHistoryActivity, "${imported.size} gardes importées !", Toast.LENGTH_SHORT).show()
                 refreshHistory()
@@ -277,7 +277,7 @@ class WorkHistoryActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvCurrentMonth).text = sdfMonth.format(currentMonth.time).replaceFirstChar { it.uppercase() }
 
         lifecycleScope.launch {
-            val dbDays = AppDatabase.getDatabase(this@WorkHistoryActivity).workDayDao()
+            val dbDays = DatabaseHelper.getDatabase(this@WorkHistoryActivity).workDayDao()
                 .getWorkDaysInRange(startMonth.timeInMillis, endMonth.timeInMillis)
             
             lastLoadedDays = dbDays
